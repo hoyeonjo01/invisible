@@ -1,25 +1,527 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invisible </title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invisible</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
+      background: #f7f5f0;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* ── LANDING ── */
+    #land {
+      position: fixed;
+      inset: 0;
+      background: #f7f5f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 50;
+      transition: opacity 0.9s ease;
+    }
+    #land.out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #bj-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+    }
+    .bl {
+      font-size: clamp(52px, 8vw, 80px);
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: rgba(0,0,0,0.09);
+      transition: color 0.18s;
+      line-height: 1;
+      letter-spacing: -1px;
+      user-select: none;
+    }
+    #bj-cur {
+      width: 2px;
+      height: clamp(42px, 6vw, 62px);
+      background: rgba(0,0,0,0.13);
+      margin-left: 4px;
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    #land-hint {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: rgba(0,0,0,0);
+      margin-top: 24px;
+      transition: color 1s;
+    }
+    #land-hint.vis { color: rgba(0,0,0,0.18); }
+
+    /* ── MAIN ── */
+    #main {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+    #scroll-driver {
+      height: 100vh;
+      overflow-y: scroll;
+      position: relative;
+    }
+    #scroll-driver::-webkit-scrollbar { width: 2px; }
+    #scroll-driver::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); }
+    #tall { height: 2800px; }
+    #scatter {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #items-layer { position: absolute; inset: 0; }
+
+    .item {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 88px;
+      height: 64px;
+    }
+    .i-img {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.9s ease;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    .i-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .i-loc { font-size: 8px; letter-spacing: 0.03em; text-align: center; }
+    .i-txt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      white-space: nowrap;
+      pointer-events: none;
       text-align: center;
     }
-    h1 {
-      font-size: 64px;
+    .i-txt.clickable { pointer-events: auto; }
+    .i-title {
+      font-size: 12px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: #1c1c1a;
+      cursor: pointer;
+      display: block;
+      transition: opacity 0.15s;
     }
-    p {
-      line-height: 2;
+    .i-title:hover { opacity: 0.55; }
+
+    #progress-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.1);
+      width: 0%;
+      z-index: 5;
+      transition: width 0.1s;
+    }
+    #scroll-hint {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: rgba(0,0,0,0.18);
+      letter-spacing: 0.12em;
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity 0.6s;
+    }
+    #pct-label {
+      position: absolute;
+      bottom: 14px;
+      right: 16px;
+      font-size: 8px;
+      color: rgba(0,0,0,0.16);
+      letter-spacing: 0.08em;
+      z-index: 5;
+    }
+
+    /* ── DETAIL ── */
+    #detail {
+      position: fixed;
+      inset: 0;
+      background: #f7f5f0;
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    #detail.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #det-nav {
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 0.5px solid rgba(0,0,0,0.07);
+    }
+    #back-btn {
+      background: none;
+      border: none;
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      color: rgba(0,0,0,0.28);
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    #back-btn:hover { color: rgba(0,0,0,0.7); }
+    #det-id-label {
+      font-size: 8px;
+      color: rgba(0,0,0,0.16);
+      letter-spacing: 0.12em;
+    }
+    #det-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 10vw;
+    }
+    #det-inner { max-width: 500px; width: 100%; }
+    #det-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: #1c1c1a;
+      margin-bottom: 32px;
+      line-height: 1.2;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #det-scene {
+      font-size: 13px;
+      color: rgba(0,0,0,0.42);
+      font-style: italic;
+      line-height: 1.9;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #det-sep {
+      width: 20px;
+      height: 0.5px;
+      background: rgba(0,0,0,0.13);
+      margin: 26px 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #det-rule {
+      font-size: 15px;
+      font-family: Georgia, serif;
+      color: rgba(0,0,0,0.85);
+      line-height: 1.85;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+    #det-meta {
+      margin-top: 32px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .meta-tag {
+      font-size: 7px;
+      letter-spacing: 0.1em;
+      color: rgba(0,0,0,0.26);
+      border: 0.5px solid rgba(0,0,0,0.1);
+      padding: 3px 9px;
     }
   </style>
 </head>
 <body>
-  <h1>Invisible Règles</h1>
-  <p>우리는 특정 사회에서 살아가면서 자연스럽게 행동 방식, 시간 개념, 공공 공간에서의 태도, 신체 표현 등 다양한 규칙을 배우게 된다. <br>
-    이러한 규칙들은 명확하게 적혀 있지 않지만 사회 속에서 반복되며 '당연한 것'으로 인식된다.<br>
-  <br>그러나 다른 문화권에 놓이게 되면, 이전까지 자연스럽다고 생각했던 행동들이 낯설어지고 동시에 그 사회에서 또 다른 방식의 규칙이 존재한다는 것을 발견하게 된다.</p>
+
+  <!-- LANDING -->
+  <div id="land">
+    <div id="bj-wrap">
+      <span class="bl">b</span>
+      <span class="bl">o</span>
+      <span class="bl">n</span>
+      <span class="bl">j</span>
+      <span class="bl">o</span>
+      <span class="bl">u</span>
+      <span class="bl">r</span>
+      <div id="bj-cur"></div>
+    </div>
+    <div id="land-hint">— type this —</div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div id="scroll-driver">
+      <div id="tall">
+        <div id="scatter">
+          <div id="items-layer"></div>
+          <div id="progress-bar"></div>
+          <div id="scroll-hint">↓ scroll</div>
+          <div id="pct-label"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div id="detail">
+    <div id="det-nav">
+      <button id="back-btn">← retour</button>
+      <span id="det-id-label"></span>
+    </div>
+    <div id="det-body">
+      <div id="det-inner">
+        <div id="det-title"></div>
+        <div id="det-scene"></div>
+        <div id="det-sep"></div>
+        <div id="det-rule"></div>
+        <div id="det-meta"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── DATA ── */
+    const DATA = [
+      { id:'FR-001', title:'Faire la bise',
+        scene:'처음 만나는 사람이 볼에 입술을 가져온다',
+        rule:'처음 만나는 사이에도 볼 입맞춤으로 인사한다. 거부하면 무례하다.',
+        domain:'BODY', adopted:84, visible:70, label:'카페 입구',
+        color:'#eac8a8', accent:'#B84018' },
+      { id:'FR-003', title:'Nu en pharmacie',
+        scene:'약국 쇼윈도에 나체 마네킹이 서 있다',
+        rule:'신체는 의료적·미용적 맥락에서 자연스럽게 전시된다.',
+        domain:'BODY', adopted:40, visible:90, label:'약국 앞',
+        color:'#eac8a8', accent:'#B84018' },
+      { id:'FR-008', title:'Pause déjeuner',
+        scene:'점심에 두 시간 동안 식당이 문을 닫는다',
+        rule:'식사는 멈춤이다. 업무 중에 이루어지지 않는다.',
+        domain:'TIME', adopted:88, visible:60, label:'식당 문',
+        color:'#aacce0', accent:'#1460A0' },
+      { id:'FR-010', title:'Debout au zinc',
+        scene:'카페 바에 서서 에스프레소를 마신다',
+        rule:'바 스탠딩은 앉는 것보다 빠르고 저렴하다.',
+        domain:'FOOD', adopted:93, visible:40, label:'카페 바',
+        color:'#e0c898', accent:'#906010' },
+      { id:'FR-014', title:"File d'attente",
+        scene:'줄이 없다. 사람들이 그냥 앞으로 걷는다',
+        rule:'공간 점유가 대기 순서를 결정하지 않는다.',
+        domain:'SPACE', adopted:16, visible:26, label:'버스 정류장',
+        color:'#aad8cc', accent:'#157050' },
+      { id:'FR-019', title:'Tu ou Vous',
+        scene:'교수에게 tu를 쓰는 학생을 목격한다',
+        rule:'친밀감은 나이보다 관계의 성격에 달려 있다.',
+        domain:'LANG', adopted:50, visible:84, label:'강의실',
+        color:'#cac8ec', accent:'#4A46A8' },
+      { id:'FR-025', title:'Dimanche vide',
+        scene:'일요일 오후 2시, 아무것도 열려 있지 않다',
+        rule:'일요일은 도시가 아닌 사람을 위한 날이다.',
+        domain:'TIME', adopted:80, visible:20, label:'텅 빈 거리',
+        color:'#aacce0', accent:'#1460A0' },
+      { id:'FR-030', title:'Pain comme ustensile',
+        scene:'빵 조각으로 접시의 소스를 닦아낸다',
+        rule:'빵은 음식이자 도구다.',
+        domain:'FOOD', adopted:96, visible:30, label:'식탁',
+        color:'#e0c898', accent:'#906010' },
+      { id:'FR-035', title:'Regard dans le métro',
+        scene:'지하철에서 낯선 사람과 시선이 마주친다',
+        rule:'시선 회피는 예의가 아니라 무관심이다.',
+        domain:'BODY', adopted:26, visible:16, label:'지하철 안',
+        color:'#eac8a8', accent:'#B84018' },
+      { id:'KR-001', title:'신발 벗기',
+        scene:'문 앞에 줄지어 있는 신발들',
+        rule:'실내는 신발 없이 걷는 공간이다.',
+        domain:'SPACE', adopted:100, visible:94, label:'현관',
+        color:'#aad8cc', accent:'#157050' },
+      { id:'KR-002', title:'나이와 존댓말',
+        scene:'처음 만난 사람에게 나이를 묻는다',
+        rule:'나이는 언어 사용 규칙을 결정한다.',
+        domain:'LANG', adopted:100, visible:90, label:'첫 만남',
+        color:'#cac8ec', accent:'#4A46A8' },
+    ];
+
+    /* ── STATE ── */
+    let page = 'land';
+    let bjProg = 0;
+    let cardEls = [];
+    let detTimers = [];
+    let scrollHintGone = false;
+
+    /* ── LANDING ── */
+    const blSpans = document.querySelectorAll('.bl');
+    const landEl = document.getElementById('land');
+    const scrollDriver = document.getElementById('scroll-driver');
+
+    // Show hint after 2.5s
+    setTimeout(() => document.getElementById('land-hint').classList.add('vis'), 2500);
+
+    function updateBj(n) {
+      blSpans.forEach((el, i) => {
+        el.style.color = i < n ? 'rgba(0,0,0,0.88)' : 'rgba(0,0,0,0.09)';
+      });
+    }
+
+    function handleLandKey(ch) {
+      if (page !== 'land') return;
+      const target = 'bonjour';
+      if (ch === target[bjProg]) {
+        bjProg++;
+        updateBj(bjProg);
+        if (bjProg === 7) setTimeout(goMain, 650);
+      } else if (ch.length === 1) {
+        bjProg = 0;
+        updateBj(0);
+      }
+    }
+
+    document.addEventListener('keydown', e => handleLandKey(e.key.toLowerCase()));
+    landEl.addEventListener('click', () => document.body.focus());
+
+    function goMain() {
+      page = 'main';
+      landEl.classList.add('out');
+      initCards();
+    }
+
+    /* ── MAIN ── */
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+    function initCards() {
+      const scatter = document.getElementById('scatter');
+      const W = scatter.offsetWidth;
+      const H = scatter.offsetHeight;
+      const PAD = Math.max(60, W * 0.08);
+      const AW = W - PAD * 2;
+      const AH = H - PAD * 2;
+      const layer = document.getElementById('items-layer');
+      layer.innerHTML = '';
+      cardEls = [];
+
+      DATA.forEach(item => {
+        const ox = PAD + (item.adopted / 100) * AW;
+        const oy = PAD + (1 - item.visible / 100) * AH;
+
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.style.left = ox + 'px';
+        el.style.top = oy + 'px';
+
+        // Image card
+        const img = document.createElement('div');
+        img.className = 'i-img';
+        img.style.background = item.color;
+        const dot = document.createElement('div');
+        dot.className = 'i-dot';
+        dot.style.background = item.accent;
+        const loc = document.createElement('div');
+        loc.className = 'i-loc';
+        loc.style.color = item.accent;
+        loc.textContent = item.label;
+        img.appendChild(dot);
+        img.appendChild(loc);
+
+        // Text
+        const txt = document.createElement('div');
+        txt.className = 'i-txt';
+        const titleEl = document.createElement('span');
+        titleEl.className = 'i-title';
+        titleEl.textContent = item.title;
+        titleEl.addEventListener('click', () => goDetail(item));
+        txt.appendChild(titleEl);
+
+        el.appendChild(img);
+        el.appendChild(txt);
+        layer.appendChild(el);
+        cardEls.push({ item, el, img, txt });
+      });
+
+      applyAdapt(0);
+    }
+
+    function applyAdapt(t) {
+      cardEls.forEach(d => {
+        const threshold = (100 - d.item.adopted) * 0.7;
+        const p = clamp((t - threshold) / 22, 0, 1);
+        d.img.style.opacity = String(1 - p);
+        d.txt.style.opacity = String(p);
+        if (p > 0.5) d.txt.classList.add('clickable');
+        else d.txt.classList.remove('clickable');
+      });
+      document.getElementById('progress-bar').style.width = t + '%';
+      const lbl = document.getElementById('pct-label');
+      lbl.textContent = (t > 4 && t < 97) ? Math.round(t) + '%' : '';
+    }
+
+    scrollDriver.addEventListener('scroll', () => {
+      if (!scrollHintGone) {
+        scrollHintGone = true;
+        document.getElementById('scroll-hint').style.opacity = '0';
+      }
+      const max = scrollDriver.scrollHeight - scrollDriver.clientHeight;
+      applyAdapt(max > 0 ? (scrollDriver.scrollTop / max) * 100 : 0);
+    });
+
+    window.addEventListener('resize', () => {
+      if (page === 'main') initCards();
+    });
+
+    /* ── DETAIL ── */
+    function goDetail(item) {
+      page = 'detail';
+      detTimers.forEach(clearTimeout);
+      detTimers = [];
+
+      document.getElementById('det-id-label').textContent = item.id + ' — ' + item.domain;
+      document.getElementById('det-title').textContent = item.title;
+      document.getElementById('det-scene').textContent = item.scene;
+      document.getElementById('det-rule').textContent = item.rule;
+      document.getElementById('det-meta').innerHTML =
+        `<span class="meta-tag">${item.domain}</span>` +
+        `<span class="meta-tag">adopted ${item.adopted}</span>` +
+        `<span class="meta-tag">visible ${item.visible}</span>`;
+
+      ['det-title','det-scene','det-sep','det-rule','det-meta']
+        .forEach(id => document.getElementById(id).style.opacity = '0');
+
+      document.getElementById('detail').classList.add('show');
+
+      detTimers.push(setTimeout(() => document.getElementById('det-title').style.opacity = '1', 150));
+      detTimers.push(setTimeout(() => document.getElementById('det-scene').style.opacity = '1', 450));
+      detTimers.push(setTimeout(() => document.getElementById('det-sep').style.opacity = '1', 1650));
+      detTimers.push(setTimeout(() => document.getElementById('det-rule').style.opacity = '1', 2050));
+      detTimers.push(setTimeout(() => document.getElementById('det-meta').style.opacity = '1', 2450));
+    }
+
+    document.getElementById('back-btn').addEventListener('click', () => {
+      page = 'main';
+      document.getElementById('detail').classList.remove('show');
+    });
+  </script>
 </body>
 </html>
