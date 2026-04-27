@@ -7,8 +7,6 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #f7f5f0; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; width: 100vw; }
-
-    /* LANDING */
     #land { position: fixed; inset: 0; background: #f7f5f0; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 50; transition: opacity 0.9s ease; }
     #land.out { opacity: 0; pointer-events: none; }
     #bj-wrap { display: flex; align-items: baseline; }
@@ -17,8 +15,6 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     #land-hint { font-size: 9px; letter-spacing: 0.14em; color: rgba(0,0,0,0); margin-top: 24px; transition: color 1s; }
     #land-hint.vis { color: rgba(0,0,0,0.16); }
-
-    /* MAIN */
     #main { position: fixed; inset: 0; }
     #main-nav { position: absolute; top: 18px; right: 20px; z-index: 10; display: flex; gap: 14px; }
     .nav-btn { background: none; border: none; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 0.1em; color: rgba(0,0,0,0.22); cursor: pointer; padding: 0; transition: color 0.15s; }
@@ -29,7 +25,6 @@
     #wide { width: 300vw; height: 100vh; position: relative; }
     #scatter { position: sticky; left: 0; width: 100vw; height: 100vh; overflow: hidden; }
     #items-layer { position: absolute; inset: 0; }
-
     .item { position: absolute; transform: translate(-50%, -50%); width: 88px; height: 64px; }
     .i-img { position: absolute; inset: 0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.9s ease; box-shadow: 0 1px 5px rgba(0,0,0,0.1); overflow: hidden; }
     .i-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -39,15 +34,12 @@
     .i-txt.on { pointer-events: auto; }
     .i-title { font-size: 12px; font-family: Georgia, serif; font-style: italic; color: #1c1c1a; cursor: pointer; display: block; transition: opacity 0.15s; }
     .i-title:hover { opacity: 0.5; }
-
     #axis-top { position: absolute; top: 18px; left: 18px; font-size: 8px; color: rgba(0,0,0,0.16); letter-spacing: 0.08em; pointer-events: none; }
     #axis-bottom { position: absolute; bottom: 36px; left: 18px; font-size: 8px; color: rgba(0,0,0,0.16); letter-spacing: 0.08em; pointer-events: none; }
     #axis-left { position: absolute; bottom: 20px; left: 20px; font-size: 8px; color: rgba(0,0,0,0.16); letter-spacing: 0.08em; pointer-events: none; }
     #axis-right { position: absolute; bottom: 20px; right: 20px; font-size: 8px; color: rgba(0,0,0,0.16); letter-spacing: 0.08em; pointer-events: none; }
     #pbar { position: absolute; bottom: 0; left: 0; height: 1px; background: rgba(0,0,0,0.1); width: 0%; transition: width 0.1s; }
     #scroll-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: rgba(0,0,0,0.16); letter-spacing: 0.12em; pointer-events: none; transition: opacity 0.6s; white-space: nowrap; }
-
-    /* DETAIL */
     #detail { position: fixed; inset: 0; background: #f7f5f0; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.45s; overflow-y: auto; display: flex; flex-direction: column; }
     #detail.show { opacity: 1; pointer-events: auto; }
     .page-nav { padding: 20px 28px; display: flex; align-items: center; gap: 16px; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
@@ -68,8 +60,6 @@
     .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
     .tag { font-size: 7px; letter-spacing: 0.09em; color: rgba(0,0,0,0.3); border: 0.5px solid rgba(0,0,0,0.1); padding: 3px 8px; }
     .tag.th { border-color: rgba(0,0,0,0.18); color: rgba(0,0,0,0.45); }
-
-    /* ARCHIVE */
     #archive { position: fixed; inset: 0; background: #f7f5f0; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.4s; display: flex; flex-direction: column; }
     #archive.show { opacity: 1; pointer-events: auto; }
     #arc-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
@@ -157,382 +147,48 @@
 
 <script>
 const DATA = [
-  {
-    id:'FR-001', title:'La caution prend son temps',
-    scene:'퇴거 후 집주인에게 보증금 반환을 요청했더니, 법적으로 최대 2개월 이내에 돌려주면 된다는 답변을 받았다. 즉시 반환을 기대했던 나와 달리 집주인은 전혀 서두르지 않았다.',
-    rule:'보증금 반환은 즉각적인 의무가 아니라 일정 기간 내 처리되는 행정 절차다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:30, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-001
-  },
-  {
-    id:'FR-002', title:'Le corps non épilé',
-    scene:'학교에서 만난 친구들이 제모를 하지 않은 채 민소매를 입고 다녔다. 주변 누구도 인상을 찌푸리지 않았고, 당사자도 전혀 부끄러워하지 않았다.',
-    rule:'타인이 개입하거나 판단할 영역이 아니다.',
-    domain:'BODY', observation_method:'목격',
-    visibility_score:60, adopted:'인지', adopted_score:40,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Foucault', source_type:'personal',
-    color:'#e8c8a8', accent:'#C44820', image:FR-002
-  },
-  {
-    id:'FR-003', title:'Sans soutien-gorge',
-    scene:'수업 중 반 대다수의 여학생들이 브라를 하지 않아 유두가 셔츠 위로 표시가 났다. 아무도 이를 의식하거나 언급하지 않았다.',
-    rule:'속옷 착용 여부는 개인의 선택이며, 신체 노출은 성적인 맥락으로 자동 해석되지 않는다.',
-    domain:'BODY', observation_method:'목격',
-    visibility_score:60, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Foucault, Hofstede', source_type:'personal',
-    color:'#e8c8a8', accent:'#C44820', image:FR-003
-  },
-  {
-    id:'FR-004', title:'Le bruit dans les transports',
-    scene:'트램 안에서 한 승객이 스피커폰으로 통화를 하고, 다른 승객은 이어폰 없이 동영상을 재생했다. 주변 승객 누구도 불쾌한 반응을 보이지 않았다.',
-    rule:'대중교통에서 개인의 소리가 타인에게 들리는 것은 크게 문제되지 않는다.',
-    domain:'SPACE', observation_method:'경험',
-    visibility_score:45, adopted:'인지', adopted_score:40,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#a8d8cc', accent:'#157050', image:FR-004
-  },
-  {
-    id:'FR-005', title:'Le dîner, c\'est une expérience',
-    scene:'프랑스 친구에게 저녁 식사에 초대받았다. 오후 8시에 시작된 자리는 10시가 다 되어 끝났다. 뉴스를 보며 대화하고, 좋아하는 영화를 소개하고, 샴페인을 마시며 우노를 했다.',
-    rule:'저녁 식사는 음식을 먹는 행위가 아니라 함께 시간을 보내는 사회적 경험이다.',
-    domain:'FOOD', observation_method:'경험',
-    visibility_score:45, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#dcc898', accent:'#906010', image:FR-005
-  },
-  {
-    id:'FR-006', title:'La CAF prend son temps',
-    scene:'한국에서부터 서류를 준비해 프랑스 도착 직후 CAF(주거보조금)를 신청했다. 한 달이 넘도록 아무런 업데이트가 없었고, 프랑스 친구와 직접 사무실을 방문해 문의한 후 2주 뒤에야 보조금을 받을 수 있었다.',
-    rule:'행정 처리는 \'최대한 빨리\'가 목표로 진행되지 않는다. 때로는 직접 찾아가는 것이 해결책이 될 수 있다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:15, adopted:'수용', adopted_score:65,
-    emotional_intensity:'4', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal, form',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-006
-  },
-  {
-    id:'FR-007', title:'Par courrier, s\'il vous plaît',
-    scene:'아멜리 카드(건강보험증) 발급을 위해 사무실에 총 두 번 우편을 보냈다. 집을 비울 때도 퇴거 의사를 최소 한 달 전에 집주인에게 우편으로 전달해야 했다.',
-    rule:'프랑스 행정에서 우편은 공식적인 의사소통 수단이다. 디지털보다 종이 문서가 법적 효력을 가진다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:85, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-007
-  },
-  {
-    id:'FR-008', title:'On se parle dans le bus',
-    scene:'껑에서 파리행 버스에서 옆에 앉은 중년 남자가 먼저 말을 걸어왔다. 그는 조각가로 활동한다며 작품 사진을 보여줬고, 파리 도착 후 지하철까지 함께 타며 남은 일정을 응원해줬다.',
-    rule:'낯선 사람에게 먼저 말을 거는 것은 무례하거나 이상한 행동이 아니다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:70, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'일회',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-008
-  },
-  {
-    id:'FR-009', title:'Bonne journée, inconnue',
-    scene:'뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 \'좋은 하루 보내세요\'라고 말하고 갔다. 서로 아무 관계도 없었다.',
-    rule:'공공장소에서 모르는 사람에게 가볍게 인사하거나 따뜻한 말을 건네는 것이 자연스럽다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:70, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-009
-  },
-  {
-    id:'FR-010', title:'Le sourire dans la rue',
-    scene:'길을 걷다 보면 서로 모르는 사이임에도 눈이 마주치면 미소를 짓거나 가볍게 인사하고 지나간다.',
-    rule:'시선이 마주쳤을 때 미소나 인사는 적대감이 아닌 일상적인 사회적 신호다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:60, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-010
-  },
-  {
-    id:'FR-011', title:'Bonjour d\'abord',
-    scene:'마트에서 찾는 물건이 없어 점원에게 바로 질문했더니 점원이 \'Bonjour?\'라고 반문했다. 뒤늦게 인사를 하고 나서야 점원이 친절하게 답해줬다.',
-    rule:'대화는 반드시 인사로 시작해야 한다. 인사 없이 요청하는 것은 무례하다. Bonjour Effect',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:80, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-011
-  },
-  {
-    id:'FR-012', title:'Pardon, toujours',
-    scene:'사람이 많은 인도에서 어깨가 스칠 것 같으면 실제로 부딪히지 않아도 \'Pardon\'이라고 말하며 지나간다.',
-    rule:'타인의 공간을 침범할 가능성이 생기는 순간, 말로 먼저 양해를 구하는 것이 예의다.',
-    domain:'LANG', observation_method:'목격',
-    visibility_score:70, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-012
-  },
-  {
-    id:'FR-013', title:'Le processus vaut le résultat',
-    scene:'학기말 전시 준비를 위해 조별로 의견을 내고 발표한 뒤 직접 만들어보는 수업이 오전 9시부터 오후 6시까지 진행됐다. 누구도 비효율적이라며 불평하거나 의아해하지 않았다.',
-    rule:'과정 자체에 가치가 있다. 결과보다 경험과 참여가 우선될 수 있다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:25, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'일회',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-013
-  },
-  {
-    id:'FR-014', title:'Bah... du coup... en fait',
-    scene:'프랑스 친구들과 대화할 때 \'Bah...\', \'Phhh...\', \'Du coup\', \'En fait\' 같은 추임새와 혀 차는 소리가 자주 등장했다. 감정과 뉘앙스를 표현하는 소리가 대화 속에 자연스럽게 섞여 있었다.',
-    rule:'언어적 추임새는 감정과 태도를 전달하는 중요한 소통 수단이다. 불편한 심정을 드러내도 그걸 무례하다고 생각하지 않는다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:45, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-014
-  },
-  {
-    id:'FR-015', title:'On fume partout',
-    scene:'길거리에서 한 손에 유모차, 다른 손에 담배를 든 부모들을 자주 봤다. 카페 테라스에서는 흡연이 암묵적으로 허용되며, 비대면 수업 중에 교수님이 담배를 피우고 학생들도 함께 피웠다.',
-    rule:'흡연은 공간 곳곳에서 자연스럽게 이루어지며, 별도의 지정 구역 없이 일상 속에 존재한다.',
-    domain:'SPACE', observation_method:'목격',
-    visibility_score:60, adopted:'낯섦', adopted_score:20,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Foucault', source_type:'personal',
-    color:'#a8d8cc', accent:'#157050', image:FR-015
-  },
-  {
-    id:'FR-016', title:'Ma chaise, votre gratitude',
-    scene:'워크숍에서 의자가 부족해 나이가 있는 교수님께 내 의자를 양보했더니, 교수님이 과할 정도로 감사 인사를 하셨다. 당연히 해야 할 행동이라고 생각했는데 그 반응이 의외였다.',
-    rule:'나이에 따른 자동적인 양보나 배려가 당연하지 않다. 배려는 개인의 선택이고, 받는 사람도 그것을 특별하게 인식한다.',
-    domain:'SPACE', observation_method:'경험',
-    visibility_score:30, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'일회',
-    theory_tag:'Hofstede', source_type:'form',
-    color:'#a8d8cc', accent:'#157050', image:FR-016
-  },
-  {
-    id:'FR-017', title:'Non, c\'est non',
-    scene:'워크숍에서 교수님이 활동을 제안했는데, 하고 싶은 사람들만 따라갔다. 참여하지 않은 사람들도 아무런 눈치를 보지 않았고, 강요도 없었다.',
-    rule:'제안은 의무가 아니다. 참여 여부는 개인이 결정하며 거절해도 관계에 영향이 없다.',
-    domain:'LANG', observation_method:'목격',
-    visibility_score:45, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'일회',
-    theory_tag:'Hofstede', source_type:'form',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-017
-  },
-  {
-    id:'FR-018', title:'En vacances, on ne dérange pas',
-    scene:'직장 동료가 휴가를 떠났다. 급한 업무가 있어도 연락하는 것이 실례라는 분위기였다. 작은 가게도 여름휴가 기간엔 문을 닫고 아무도 이를 이상하게 여기지 않았다.',
-    rule:'휴가는 침범할 수 없는 개인의 시간이다. 업무 연락은 휴가 기간 중 하지 않는 것이 예의다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:15, adopted:'수용', adopted_score:65,
-    emotional_intensity:'4', frequency:'일회',
-    theory_tag:'Hall', source_type:'community',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-018
-  },
-  {
-    id:'FR-019', title:'Le dimanche, tout s\'arrête',
-    scene:'일요일에 장을 보러 마트에 갔더니 문이 닫혀 있었다. 거의 모든 가게가 문을 닫아 거리가 조용했다. 이후로 장은 토요일에 미리 봐야 한다는 것을 알게 됐다.',
-    rule:'일요일은 상업 활동이 멈추는 날이다. 개인도 사회도 쉬는 것이 당연하다.',
-    domain:'TIME', observation_method:'경험',
-    visibility_score:75, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#a8cce0', accent:'#1460A0', image:FR-019
-  },
-  {
-    id:'FR-020', title:'Tous les âges, même espace',
-    scene:'테라스, 바, 펍, 클럽 어디에서나 17세부터 80세까지 다양한 연령대가 함께 어울렸다. 나이 때문에 \'여기는 내가 있을 곳이 아니다\'라는 분위기가 없었다.',
-    rule:'공공 유흥 공간은 나이에 따라 구분되지 않는다. 누구나 원하면 있을 수 있다.',
-    domain:'SPACE', observation_method:'목격',
-    visibility_score:60, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#a8d8cc', accent:'#157050', image:FR-020
-  },
-  {
-    id:'FR-021', title:'Crotte sur le trottoir',
-    scene:'파리 길거리를 걷다 보면 곳곳에 강아지 배변물이 치워지지 않은 채 남아 있었다. 보호자들이 치우지 않는 경우가 많았고, 주변 사람들도 별로 신경 쓰지 않는 분위기였다.',
-    rule:'반려동물 배변 처리는 보호자의 의무이지만 실제로는 개인의 선택에 맡겨진다.',
-    domain:'SPACE', observation_method:'경험',
-    visibility_score:85, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Foucault', source_type:'personal, community',
-    color:'#a8d8cc', accent:'#157050', image:FR-021
-  },
-  {
-    id:'FR-022', title:'Le train a du retard',
-    scene:'기차 지연이나 전날 갑작스러운 운행 취소가 자주 있었다. 파리에서 껑 가는 버스를 기다렸는데 예정 시간보다 1시간이나 늦게 탈 수 있었다. 이런 일이 반복되면서 일정을 믿지 않게 됐다.',
-    rule:'대중교통의 시간표는 참고 사항이지 보장이 아니다.',
-    domain:'TIME', observation_method:'경험',
-    visibility_score:45, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#a8cce0', accent:'#1460A0', image:FR-022
-  },
-  {
-    id:'FR-023', title:'Le feu vert, c\'est pour les touristes',
-    scene:'프랑스 친구가 \'프랑스에서 초록불을 기다리는 사람은 관광객\'이라고 말했다. 실제로 파리 도착 초반 초록불을 기다리고 있었더니 옆 사람이 왜 안 건너냐고 물어봤다.',
-    rule:'횡단보도 신호는 절대 규칙이 아니다. 차가 없으면 건너는 것이 자연스럽다. 한국에서는 신호등이 기준이고 보행자가 그것에 맞춘다. 프랑스에서는 보행자의 움직임이 먼저이고 차량이 그것에 맞춰 멈춘다.',
-    domain:'SPACE', observation_method:'경험',
-    visibility_score:90, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal, form',
-    color:'#a8d8cc', accent:'#157050', image:FR-023
-  },
-  {
-    id:'FR-024', title:'Nu, mais pour tous',
-    scene:'프랑스에서 전라 장면이 모자이크 없이 나오는 영화가 12세 이상 관람가였다. 친구들에게 물으니 그게 왜 문제가 되냐고 되물었다.',
-    rule:'신체 노출 자체는 성적인 것이 아니다. 맥락이 선정성을 결정한다. 실제로 한국에서 청소년 관람불가를 받은 아메리칸 파이, 그레이의 50가지 그림자, 아가씨 같은 영화들이 프랑스에서는 각각 전체관람가나 12세 등급을 받았다.',
-    domain:'BODY', observation_method:'목격',
-    visibility_score:85, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'일회',
-    theory_tag:'Foucault', source_type:'personal',
-    color:'#e8c8a8', accent:'#C44820', image:FR-024
-  },
-  {
-    id:'FR-025', title:'Comment vous m\'appelez ?',
-    scene:'학기 초 자기소개 시간에 친구들이 이름 외에 자신을 어떤 대명사로 불러달라고 말했다. 나중에 나에게도 어떻게 지칭하면 되냐고 물어봤다.',
-    rule:'호칭 대명사는 당사자에게 직접 묻고 따르는 것이다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:75, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'3', frequency:'일회',
-    theory_tag:'Foucault', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-025
-  },
-  {
-    id:'FR-026', title:'Froid mais débattable',
-    scene:'프랑스에서 교수님과의 관계는 철저히 학문적이었다. 개인적인 대화는 거의 없었다. 반면 수업 중에는 교수의 의견에 반박하거나 토론하는 것이 장려됐다. 한국에서는 교수님과 카톡으로 일상 대화를 나누고, 카페에서 디저트도 사주시고 사적인 친밀한 대화를 했는데 수업 중 반박은 상상하기 어려웠다.',
-    rule:'프랑스에서 친밀함과 비판은 별개다. 교수와 개인적으로 가깝지 않아도 수업 중 반박은 자연스럽다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:30, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'form',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-026
-  },
-  {
-    id:'FR-027', title:'On s\'habille comme on veut',
-    scene:'학교에서 만난 친구 중 생물학적으로 남성인데 치마를 입고 다니는 사람이 있었다. 본인도 전혀 거리낌이 없었고, 주변 누구도 이상하게 보거나 반응하지 않았다.',
-    rule:'옷차림은 성별이나 타인의 시선이 아니라 자신이 원하는 것에서 출발한다. 다르게 입는 것이 용기가 필요한 일이 아니다.',
-    domain:'BODY', observation_method:'목격',
-    visibility_score:90, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Foucault', source_type:'personal',
-    color:'#e8c8a8', accent:'#C44820', image:FR-027
-  },
-  {
-    id:'FR-028', title:'Cette table est à moi',
-    scene:'카페에서 식사를 마친 후에도 한참 앉아 대화를 나눴다. 직원이 서두르게 하거나 계산서를 먼저 가져오는 일이 없었다. 자리를 비워야 한다는 압박이 전혀 없었다.',
-    rule:'식당 자리는 음식을 먹는 동안만이 아니라 손님이 원하는 만큼 머무는 공간이다.',
-    domain:'FOOD', observation_method:'경험',
-    visibility_score:45, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#dcc898', accent:'#906010', image:FR-028
-  },
-  {
-    id:'FR-029', title:'Se reposer sans culpabilité',
-    scene:'프랑스 친구들은 주말에 아무것도 하지 않거나 낮잠을 자면서 하루를 보내도 자책하지 않았다. \'오늘 아무것도 안 했어\'를 문제가 아닌 사실로 말했다.',
-    rule:'일하지 않는 시간은 낭비가 아니다. 쉬는 것은 삶의 정상적인 상태다.',
-    domain:'TIME', observation_method:'목격',
-    visibility_score:25, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#a8cce0', accent:'#1460A0', image:FR-029
-  },
-  {
-    id:'FR-030', title:'La lenteur est naturelle',
-    scene:'카페에서 커피 한 잔을 시켜놓고 두 시간째 앉아 있는 사람, 천천히 걷다 멈추고 창을 구경하는 사람들. 서두르는 사람이 오히려 눈에 띄었다.',
-    rule:'느리게 움직이는 것은 비효율이 아니다.',
-    domain:'TIME', observation_method:'목격',
-    visibility_score:25, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#a8cce0', accent:'#1460A0', image:FR-030
-  },
-  {
-    id:'FR-031', title:'Ça dépend',
-    scene:'프랑스에서 행정 처리나 규칙에 대해 물으면 종종 \'Ça dépend(경우에 따라 다르다)\'는 답이 돌아왔다. 안 된다고 들었어도 직접 찾아가 물어보면 되는 경우가 있었다.',
-    rule:'규칙은 절대적이지 않다. 상황과 담당자에 따라 결과가 달라질 수 있으므로 직접 부딪혀봐야 한다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:25, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'personal',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-031
-  },
-  {
-    id:'FR-032', title:'La grève fait partie de la vie',
-    scene:'프랑스 체류 중 크고 작은 파업을 여러 번 겪었다. 지역 단위의 조용한 파업부터 전국 규모의 격렬한 시위까지. 사람들은 \'C\'est comme ça, c\'est la vie(이런 거야, 이게 인생이야)\'라며 담담하게 받아들였다.',
-    rule:'파업과 시위는 사회적 권리의 표현이다. 불편하더라도 그 자체를 부정적으로 보지 않는다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:90, adopted:'인지', adopted_score:40,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-032
-  },
-  {
-    id:'FR-033', title:'Le quart d\'heure de politesse',
-    scene:'프랑스 친구 집 저녁 식사에 초대받아 정시에 도착했더니 호스트가 아직 준비 중이었다. 나중에 알고 보니 프랑스에서는 저녁 초대에 10~15분 늦게 도착하는 것이 오히려 예의로 여겨진다. 정시에 오면 오히려 호스트를 당황스럽게 만들 수 있다.',
-    rule:'\'예의 바른 15분(quart d\'heure de politesse)\'은 호스트에게 준비할 여유를 주는 사회적 규칙이다.',
-    domain:'TIME', observation_method:'경험',
-    visibility_score:65, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hall', source_type:'community',
-    color:'#a8cce0', accent:'#1460A0', image:FR-033
-  },
-  {
-    id:'FR-034', title:'Normalement...',
-    scene:'자동차 수리를 맡긴 뒤 정비사가 \'오후 6시에 준비될 거예요, normalement\'이라고 했다면, 백업 플랜을 세워둬라.',
-    rule:'\'Normalement(정상적으로라면)\'은 \'아마도 안 될 수도 있어요\'의 완곡한 표현이다. 확답이 아닌 가능성의 언어다.',
-    domain:'WORK', observation_method:'경험',
-    visibility_score:15, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hall', source_type:'community',
-    color:'#c8c4bc', accent:'#6B6B60', image:FR-034
-  },
-  {
-    id:'FR-035', title:'Les yeux dans les yeux',
-    scene:'프랑스 친구들과 건배를 하는데 잠깐 시선을 돌렸더니 친구가 "눈 마주쳐야 해, 안 그러면 7년간 불운이야"라고 했다.',
-    rule:'건배할 때는 잔을 부딪치는 상대방과 반드시 눈을 맞추어야 한다.',
-    domain:'FOOD', observation_method:'경험',
-    visibility_score:90, adopted:'내면화', adopted_score:85,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#dcc898', accent:'#906010', image:FR-035
-  },
-  {
-    id:'FR-036', title:'Monsieur, pas Professeur',
-    scene:'수업 중 교수님을 부를 때 "Professeur"라고 했는데, 주변 프랑스 친구들은 모두 "Monsieur"라고 부르고 있었다. 나만 직책으로 부르고 있다는 걸 그 순간 처음 알아챘다.',
-    rule:'프랑스에서 교수를 "Professeur"라고 부르는 것은 어색하다. 교수도, 의사도, 변호사도 Monsieur/Madame으로 부른다. 직책이 아니라 사람으로 호칭한다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:80, adopted:'수용', adopted_score:65,
-    emotional_intensity:'3', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'personal',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-036
-  },
-  {
-    id:'FR-037', title:'S\'interrompre, c\'est participer',
-    scene:'프랑스 대화 스타일의 가장 큰 특징은 대화 중 끼어드는 것이 허용될 뿐 아니라 오히려 환영받는다는 것이다. 침묵이 길어지면 주제가 재미없다는 신호로 읽힌다.',
-    rule:'대화 중 끼어드는 것은 적극적인 참여의 신호다.',
-    domain:'LANG', observation_method:'경험',
-    visibility_score:60, adopted:'수용', adopted_score:65,
-    emotional_intensity:'2', frequency:'반복',
-    theory_tag:'Hofstede', source_type:'community',
-    color:'#c8c4ec', accent:'#4A46A8', image:FR-037
-  }
+  { id:'FR-001', title:'La caution prend son temps', scene:'퇴거 후 집주인에게 보증금 반환을 요청했더니, 법적으로 최대 2개월 이내에 돌려주면 된다는 답변을 받았다. 즉시 반환을 기대했던 나와 달리 집주인은 전혀 서두르지 않았다.', rule:'보증금 반환은 즉각적인 의무가 아니라 일정 기간 내 처리되는 행정 절차다.', domain:'WORK', observation_method:'경험', visibility_score:30, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-001.jpeg' },
+  { id:'FR-002', title:'Le corps non épilé', scene:'학교에서 만난 친구들이 제모를 하지 않은 채 민소매를 입고 다녔다. 주변 누구도 인상을 찌푸리지 않았고, 당사자도 전혀 부끄러워하지 않았다.', rule:'타인이 개입하거나 판단할 영역이 아니다.', domain:'BODY', observation_method:'목격', visibility_score:60, adopted:'인지', adopted_score:40, emotional_intensity:'2', frequency:'반복', theory_tag:'Foucault', source_type:'personal', color:'#e8c8a8', accent:'#C44820', image:'images/FR-002.jpeg' },
+  { id:'FR-003', title:'Sans soutien-gorge', scene:'수업 중 반 대다수의 여학생들이 브라를 하지 않아 유두가 셔츠 위로 표시가 났다. 아무도 이를 의식하거나 언급하지 않았다.', rule:'속옷 착용 여부는 개인의 선택이며, 신체 노출은 성적인 맥락으로 자동 해석되지 않는다.', domain:'BODY', observation_method:'목격', visibility_score:60, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Foucault, Hofstede', source_type:'personal', color:'#e8c8a8', accent:'#C44820', image:'images/FR-003.jpeg' },
+  { id:'FR-004', title:'Le bruit dans les transports', scene:'트램 안에서 한 승객이 스피커폰으로 통화를 하고, 다른 승객은 이어폰 없이 동영상을 재생했다. 주변 승객 누구도 불쾌한 반응을 보이지 않았다.', rule:'대중교통에서 개인의 소리가 타인에게 들리는 것은 크게 문제되지 않는다.', domain:'SPACE', observation_method:'경험', visibility_score:45, adopted:'인지', adopted_score:40, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#a8d8cc', accent:'#157050', image:'images/FR-004.jpeg' },
+  { id:'FR-005', title:'Le dîner, c\'est une expérience', scene:'프랑스 친구에게 저녁 식사에 초대받았다. 오후 8시에 시작된 자리는 10시가 다 되어 끝났다. 뉴스를 보며 대화하고, 좋아하는 영화를 소개하고, 샴페인을 마시며 우노를 했다.', rule:'저녁 식사는 음식을 먹는 행위가 아니라 함께 시간을 보내는 사회적 경험이다.', domain:'FOOD', observation_method:'경험', visibility_score:45, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#dcc898', accent:'#906010', image:'images/FR-005.jpeg' },
+  { id:'FR-006', title:'La CAF prend son temps', scene:'한국에서부터 서류를 준비해 프랑스 도착 직후 CAF(주거보조금)를 신청했다. 한 달이 넘도록 아무런 업데이트가 없었고, 프랑스 친구와 직접 사무실을 방문해 문의한 후 2주 뒤에야 보조금을 받을 수 있었다.', rule:'행정 처리는 \'최대한 빨리\'가 목표로 진행되지 않는다. 때로는 직접 찾아가는 것이 해결책이 될 수 있다.', domain:'WORK', observation_method:'경험', visibility_score:15, adopted:'수용', adopted_score:65, emotional_intensity:'4', frequency:'반복', theory_tag:'Hall', source_type:'personal, form', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-006.jpeg' },
+  { id:'FR-007', title:'Par courrier, s\'il vous plaît', scene:'아멜리 카드(건강보험증) 발급을 위해 사무실에 총 두 번 우편을 보냈다. 집을 비울 때도 퇴거 의사를 최소 한 달 전에 집주인에게 우편으로 전달해야 했다.', rule:'프랑스 행정에서 우편은 공식적인 의사소통 수단이다. 디지털보다 종이 문서가 법적 효력을 가진다.', domain:'WORK', observation_method:'경험', visibility_score:85, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-007.jpeg' },
+  { id:'FR-008', title:'On se parle dans le bus', scene:'껑에서 파리행 버스에서 옆에 앉은 중년 남자가 먼저 말을 걸어왔다. 그는 조각가로 활동한다며 작품 사진을 보여줬고, 파리 도착 후 지하철까지 함께 타며 남은 일정을 응원해줬다.', rule:'낯선 사람에게 먼저 말을 거는 것은 무례하거나 이상한 행동이 아니다.', domain:'LANG', observation_method:'경험', visibility_score:70, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'일회', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-008.jpeg' },
+  { id:'FR-009', title:'Bonne journée, inconnue', scene:'뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 \'좋은 하루 보내세요\'라고 말하고 갔다. 서로 아무 관계도 없었다.', rule:'공공장소에서 모르는 사람에게 가볍게 인사하거나 따뜻한 말을 건네는 것이 자연스럽다.', domain:'LANG', observation_method:'경험', visibility_score:70, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-009.jpeg' },
+  { id:'FR-010', title:'Le sourire dans la rue', scene:'길을 걷다 보면 서로 모르는 사이임에도 눈이 마주치면 미소를 짓거나 가볍게 인사하고 지나간다.', rule:'시선이 마주쳤을 때 미소나 인사는 적대감이 아닌 일상적인 사회적 신호다.', domain:'LANG', observation_method:'경험', visibility_score:60, adopted:'내면화', adopted_score:85, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-010.jpeg' },
+  { id:'FR-011', title:'Bonjour d\'abord', scene:'마트에서 찾는 물건이 없어 점원에게 바로 질문했더니 점원이 \'Bonjour?\'라고 반문했다. 뒤늦게 인사를 하고 나서야 점원이 친절하게 답해줬다.', rule:'대화는 반드시 인사로 시작해야 한다. 인사 없이 요청하는 것은 무례하다.', domain:'LANG', observation_method:'경험', visibility_score:80, adopted:'내면화', adopted_score:85, emotional_intensity:'3', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-011.jpeg' },
+  { id:'FR-012', title:'Pardon, toujours', scene:'사람이 많은 인도에서 어깨가 스칠 것 같으면 실제로 부딪히지 않아도 \'Pardon\'이라고 말하며 지나간다.', rule:'타인의 공간을 침범할 가능성이 생기는 순간, 말로 먼저 양해를 구하는 것이 예의다.', domain:'LANG', observation_method:'목격', visibility_score:70, adopted:'내면화', adopted_score:85, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-012.jpeg' },
+  { id:'FR-013', title:'Le processus vaut le résultat', scene:'학기말 전시 준비를 위해 조별로 의견을 내고 발표한 뒤 직접 만들어보는 수업이 오전 9시부터 오후 6시까지 진행됐다. 누구도 비효율적이라며 불평하거나 의아해하지 않았다.', rule:'과정 자체에 가치가 있다. 결과보다 경험과 참여가 우선될 수 있다.', domain:'WORK', observation_method:'경험', visibility_score:25, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'일회', theory_tag:'Hall', source_type:'personal', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-013.jpeg' },
+  { id:'FR-014', title:'Bah... du coup... en fait', scene:'프랑스 친구들과 대화할 때 \'Bah...\', \'Phhh...\', \'Du coup\', \'En fait\' 같은 추임새와 혀 차는 소리가 자주 등장했다.', rule:'언어적 추임새는 감정과 태도를 전달하는 중요한 소통 수단이다.', domain:'LANG', observation_method:'경험', visibility_score:45, adopted:'내면화', adopted_score:85, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-014.jpeg' },
+  { id:'FR-015', title:'On fume partout', scene:'길거리에서 한 손에 유모차, 다른 손에 담배를 든 부모들을 자주 봤다. 카페 테라스에서는 흡연이 암묵적으로 허용되며, 비대면 수업 중에 교수님이 담배를 피우고 학생들도 함께 피웠다.', rule:'흡연은 공간 곳곳에서 자연스럽게 이루어지며, 별도의 지정 구역 없이 일상 속에 존재한다.', domain:'SPACE', observation_method:'목격', visibility_score:60, adopted:'낯섦', adopted_score:20, emotional_intensity:'3', frequency:'반복', theory_tag:'Foucault', source_type:'personal', color:'#a8d8cc', accent:'#157050', image:'images/FR-015.jpeg' },
+  { id:'FR-016', title:'Ma chaise, votre gratitude', scene:'워크숍에서 의자가 부족해 나이가 있는 교수님께 내 의자를 양보했더니, 교수님이 과할 정도로 감사 인사를 하셨다.', rule:'나이에 따른 자동적인 양보나 배려가 당연하지 않다. 배려는 개인의 선택이고, 받는 사람도 그것을 특별하게 인식한다.', domain:'SPACE', observation_method:'경험', visibility_score:30, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'일회', theory_tag:'Hofstede', source_type:'form', color:'#a8d8cc', accent:'#157050', image:'images/FR-016.jpeg' },
+  { id:'FR-017', title:'Non, c\'est non', scene:'워크숍에서 교수님이 활동을 제안했는데, 하고 싶은 사람들만 따라갔다. 참여하지 않은 사람들도 아무런 눈치를 보지 않았고, 강요도 없었다.', rule:'제안은 의무가 아니다. 참여 여부는 개인이 결정하며 거절해도 관계에 영향이 없다.', domain:'LANG', observation_method:'목격', visibility_score:45, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'일회', theory_tag:'Hofstede', source_type:'form', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-017.jpeg' },
+  { id:'FR-018', title:'En vacances, on ne dérange pas', scene:'직장 동료가 휴가를 떠났다. 급한 업무가 있어도 연락하는 것이 실례라는 분위기였다.', rule:'휴가는 침범할 수 없는 개인의 시간이다. 업무 연락은 휴가 기간 중 하지 않는 것이 예의다.', domain:'WORK', observation_method:'경험', visibility_score:15, adopted:'수용', adopted_score:65, emotional_intensity:'4', frequency:'일회', theory_tag:'Hall', source_type:'community', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-018.jpeg' },
+  { id:'FR-019', title:'Le dimanche, tout s\'arrête', scene:'일요일에 장을 보러 마트에 갔더니 문이 닫혀 있었다. 거의 모든 가게가 문을 닫아 거리가 조용했다.', rule:'일요일은 상업 활동이 멈추는 날이다. 개인도 사회도 쉬는 것이 당연하다.', domain:'TIME', observation_method:'경험', visibility_score:75, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#a8cce0', accent:'#1460A0', image:'images/FR-019.jpeg' },
+  { id:'FR-020', title:'Tous les âges, même espace', scene:'테라스, 바, 펍, 클럽 어디에서나 17세부터 80세까지 다양한 연령대가 함께 어울렸다.', rule:'공공 유흥 공간은 나이에 따라 구분되지 않는다. 누구나 원하면 있을 수 있다.', domain:'SPACE', observation_method:'목격', visibility_score:60, adopted:'내면화', adopted_score:85, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#a8d8cc', accent:'#157050', image:'images/FR-020.jpeg' },
+  { id:'FR-021', title:'Crotte sur le trottoir', scene:'파리 길거리를 걷다 보면 곳곳에 강아지 배변물이 치워지지 않은 채 남아 있었다.', rule:'반려동물 배변 처리는 보호자의 의무이지만 실제로는 개인의 선택에 맡겨진다.', domain:'SPACE', observation_method:'경험', visibility_score:85, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Foucault', source_type:'personal, community', color:'#a8d8cc', accent:'#157050', image:'images/FR-021.jpeg' },
+  { id:'FR-022', title:'Le train a du retard', scene:'기차 지연이나 전날 갑작스러운 운행 취소가 자주 있었다. 파리에서 껑 가는 버스를 기다렸는데 예정 시간보다 1시간이나 늦게 탈 수 있었다.', rule:'대중교통의 시간표는 참고 사항이지 보장이 아니다.', domain:'TIME', observation_method:'경험', visibility_score:45, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#a8cce0', accent:'#1460A0', image:'images/FR-022.jpeg' },
+  { id:'FR-023', title:'Le feu vert, c\'est pour les touristes', scene:'프랑스 친구가 \'프랑스에서 초록불을 기다리는 사람은 관광객\'이라고 말했다.', rule:'횡단보도 신호는 절대 규칙이 아니다. 차가 없으면 건너는 것이 자연스럽다.', domain:'SPACE', observation_method:'경험', visibility_score:90, adopted:'내면화', adopted_score:85, emotional_intensity:'3', frequency:'반복', theory_tag:'Hofstede', source_type:'personal, form', color:'#a8d8cc', accent:'#157050', image:'images/FR-023.jpeg' },
+  { id:'FR-024', title:'Nu, mais pour tous', scene:'프랑스에서 전라 장면이 모자이크 없이 나오는 영화가 12세 이상 관람가였다.', rule:'신체 노출 자체는 성적인 것이 아니다. 맥락이 선정성을 결정한다.', domain:'BODY', observation_method:'목격', visibility_score:85, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'일회', theory_tag:'Foucault', source_type:'personal', color:'#e8c8a8', accent:'#C44820', image:'images/FR-024.jpeg' },
+  { id:'FR-025', title:'Comment vous m\'appelez ?', scene:'학기 초 자기소개 시간에 친구들이 이름 외에 자신을 어떤 대명사로 불러달라고 말했다.', rule:'호칭 대명사는 당사자에게 직접 묻고 따르는 것이다.', domain:'LANG', observation_method:'경험', visibility_score:75, adopted:'내면화', adopted_score:85, emotional_intensity:'3', frequency:'일회', theory_tag:'Foucault', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-025.jpeg' },
+  { id:'FR-026', title:'Froid mais débattable', scene:'프랑스에서 교수님과의 관계는 철저히 학문적이었다. 반면 수업 중에는 교수의 의견에 반박하거나 토론하는 것이 장려됐다.', rule:'프랑스에서 친밀함과 비판은 별개다. 교수와 개인적으로 가깝지 않아도 수업 중 반박은 자연스럽다.', domain:'LANG', observation_method:'경험', visibility_score:30, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'반복', theory_tag:'Hofstede', source_type:'form', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-026.jpeg' },
+  { id:'FR-027', title:'On s\'habille comme on veut', scene:'학교에서 만난 친구 중 생물학적으로 남성인데 치마를 입고 다니는 사람이 있었다. 본인도 전혀 거리낌이 없었고, 주변 누구도 이상하게 보거나 반응하지 않았다.', rule:'옷차림은 성별이나 타인의 시선이 아니라 자신이 원하는 것에서 출발한다.', domain:'BODY', observation_method:'목격', visibility_score:90, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Foucault', source_type:'personal', color:'#e8c8a8', accent:'#C44820', image:'images/FR-027.jpeg' },
+  { id:'FR-028', title:'Cette table est à moi', scene:'카페에서 식사를 마친 후에도 한참 앉아 대화를 나눴다. 직원이 서두르게 하거나 계산서를 먼저 가져오는 일이 없었다.', rule:'식당 자리는 음식을 먹는 동안만이 아니라 손님이 원하는 만큼 머무는 공간이다.', domain:'FOOD', observation_method:'경험', visibility_score:45, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#dcc898', accent:'#906010', image:'images/FR-028.jpeg' },
+  { id:'FR-029', title:'Se reposer sans culpabilité', scene:'프랑스 친구들은 주말에 아무것도 하지 않거나 낮잠을 자면서 하루를 보내도 자책하지 않았다.', rule:'일하지 않는 시간은 낭비가 아니다. 쉬는 것은 삶의 정상적인 상태다.', domain:'TIME', observation_method:'목격', visibility_score:25, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#a8cce0', accent:'#1460A0', image:'images/FR-029.jpeg' },
+  { id:'FR-030', title:'La lenteur est naturelle', scene:'카페에서 커피 한 잔을 시켜놓고 두 시간째 앉아 있는 사람, 천천히 걷다 멈추고 창을 구경하는 사람들.', rule:'느리게 움직이는 것은 비효율이 아니다.', domain:'TIME', observation_method:'목격', visibility_score:25, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#a8cce0', accent:'#1460A0', image:'images/FR-030.jpeg' },
+  { id:'FR-031', title:'Ça dépend', scene:'프랑스에서 행정 처리나 규칙에 대해 물으면 종종 \'Ça dépend\'는 답이 돌아왔다.', rule:'규칙은 절대적이지 않다. 상황과 담당자에 따라 결과가 달라질 수 있으므로 직접 부딪혀봐야 한다.', domain:'WORK', observation_method:'경험', visibility_score:25, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'personal', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-031.jpeg' },
+  { id:'FR-032', title:'La grève fait partie de la vie', scene:'프랑스 체류 중 크고 작은 파업을 여러 번 겪었다. 사람들은 담담하게 받아들였다.', rule:'파업과 시위는 사회적 권리의 표현이다. 불편하더라도 그 자체를 부정적으로 보지 않는다.', domain:'WORK', observation_method:'경험', visibility_score:90, adopted:'인지', adopted_score:40, emotional_intensity:'3', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-032.jpeg' },
+  { id:'FR-033', title:'Le quart d\'heure de politesse', scene:'프랑스 친구 집 저녁 식사에 초대받아 정시에 도착했더니 호스트가 아직 준비 중이었다.', rule:'\'예의 바른 15분\'은 호스트에게 준비할 여유를 주는 사회적 규칙이다.', domain:'TIME', observation_method:'경험', visibility_score:65, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hall', source_type:'community', color:'#a8cce0', accent:'#1460A0', image:'images/FR-033.jpeg' },
+  { id:'FR-034', title:'Normalement...', scene:'자동차 수리를 맡긴 뒤 정비사가 \'오후 6시에 준비될 거예요, normalement\'이라고 했다.', rule:'\'Normalement\'은 \'아마도 안 될 수도 있어요\'의 완곡한 표현이다.', domain:'WORK', observation_method:'경험', visibility_score:15, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'반복', theory_tag:'Hall', source_type:'community', color:'#c8c4bc', accent:'#6B6B60', image:'images/FR-034.jpeg' },
+  { id:'FR-035', title:'Les yeux dans les yeux', scene:'프랑스 친구들과 건배를 하는데 잠깐 시선을 돌렸더니 친구가 "눈 마주쳐야 해, 안 그러면 7년간 불운이야"라고 했다.', rule:'건배할 때는 잔을 부딪치는 상대방과 반드시 눈을 맞추어야 한다.', domain:'FOOD', observation_method:'경험', visibility_score:90, adopted:'내면화', adopted_score:85, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#dcc898', accent:'#906010', image:'images/FR-035.jpeg' },
+  { id:'FR-036', title:'Monsieur, pas Professeur', scene:'수업 중 교수님을 부를 때 "Professeur"라고 했는데, 주변 프랑스 친구들은 모두 "Monsieur"라고 부르고 있었다.', rule:'교수도, 의사도, 변호사도 Monsieur/Madame으로 부른다. 직책이 아니라 사람으로 호칭한다.', domain:'LANG', observation_method:'경험', visibility_score:80, adopted:'수용', adopted_score:65, emotional_intensity:'3', frequency:'반복', theory_tag:'Hofstede', source_type:'personal', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-036.jpeg' },
+  { id:'FR-037', title:'S\'interrompre, c\'est participer', scene:'프랑스 대화 스타일의 가장 큰 특징은 대화 중 끼어드는 것이 허용될 뿐 아니라 오히려 환영받는다는 것이다.', rule:'대화 중 끼어드는 것은 적극적인 참여의 신호다.', domain:'LANG', observation_method:'경험', visibility_score:60, adopted:'수용', adopted_score:65, emotional_intensity:'2', frequency:'반복', theory_tag:'Hofstede', source_type:'community', color:'#c8c4ec', accent:'#4A46A8', image:'images/FR-037.jpeg' }
 ];
 
 let page='land', bjProg=0, cardEls=[], detTimers=[], hintGone=false;
-
-const blSpans = document.querySelectorAll('.bl');
-setTimeout(()=>document.getElementById('land-hint').classList.add('vis'), 3000);
+const blSpans=document.querySelectorAll('.bl');
+setTimeout(()=>document.getElementById('land-hint').classList.add('vis'),3000);
 
 function handleKey(ch){
   if(page!=='land') return;
@@ -546,7 +202,10 @@ function handleKey(ch){
     blSpans.forEach(el=>el.style.color='rgba(0,0,0,0.08)');
   }
 }
-document.addEventListener('keydown',e=>handleKey(e.key.toLowerCase()));
+document.addEventListener('keydown',e=>{
+  const codeMap={'KeyB':'b','KeyO':'o','KeyN':'n','KeyJ':'j','KeyU':'u','KeyR':'r'};
+  handleKey(codeMap[e.code]||e.key.toLowerCase());
+});
 document.getElementById('land').addEventListener('click',()=>document.body.focus());
 
 function goMain(){
@@ -558,9 +217,9 @@ function goMain(){
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 
 function initCards(){
-  const W=window.innerWidth, H=window.innerHeight;
-  const PX=Math.max(64,W*0.08), PY=Math.max(56,H*0.1);
-  const AW=W-PX*2, AH=H-PY*2;
+  const W=window.innerWidth,H=window.innerHeight;
+  const PX=Math.max(64,W*0.08),PY=Math.max(56,H*0.1);
+  const AW=W-PX*2,AH=H-PY*2;
   const layer=document.getElementById('items-layer');
   layer.innerHTML=''; cardEls=[];
   DATA.forEach(item=>{
@@ -616,12 +275,9 @@ function goDetail(item){
   document.getElementById('det-rule').textContent=item.rule;
   document.getElementById('det-prox').textContent=item.observation_method;
   document.getElementById('det-source').textContent=item.source_type;
-  document.getElementById('det-domain-tags').innerHTML=
-    `<span class="tag">${item.domain}</span><span class="tag">${item.frequency}</span>`;
-  document.getElementById('det-theory').innerHTML=
-    item.theory_tag.split(',').map(t=>`<span class="tag th">${t.trim()}</span>`).join('');
-  ['det-title','det-sub','fb-scene','det-sep','fb-rule','fb-domain','fb-prox','fb-source','fb-theory']
-    .forEach(id=>document.getElementById(id).style.opacity='0');
+  document.getElementById('det-domain-tags').innerHTML=`<span class="tag">${item.domain}</span><span class="tag">${item.frequency}</span>`;
+  document.getElementById('det-theory').innerHTML=item.theory_tag.split(',').map(t=>`<span class="tag th">${t.trim()}</span>`).join('');
+  ['det-title','det-sub','fb-scene','det-sep','fb-rule','fb-domain','fb-prox','fb-source','fb-theory'].forEach(id=>document.getElementById(id).style.opacity='0');
   document.getElementById('detail').classList.add('show');
   const seq=[[120,'det-title'],[280,'det-sub'],[500,'fb-scene'],[1600,'det-sep'],[2000,'fb-rule'],[2400,'fb-domain'],[2600,'fb-prox'],[2800,'fb-source'],[3000,'fb-theory']];
   seq.forEach(([ms,id])=>detTimers.push(setTimeout(()=>document.getElementById(id).style.opacity='1',ms)));
@@ -632,19 +288,7 @@ function buildArchive(){
   tbody.innerHTML='';
   DATA.forEach(item=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td class="arc-num">${item.id}</td>
-      <td class="td-title">${item.title}</td>
-      <td><span class="tag" style="font-size:7px">${item.domain}</span></td>
-      <td class="td-scene">${item.scene.slice(0,30)}…</td>
-      <td class="arc-num">${item.visibility_score}</td>
-      <td class="arc-num">${item.adopted}</td>
-      <td class="arc-num">${item.observation_method}</td>
-      <td class="arc-num">${item.emotional_intensity}</td>
-      <td class="arc-num">${item.frequency}</td>
-      <td style="font-size:8px;color:rgba(0,0,0,0.4)">${item.theory_tag}</td>
-      <td class="arc-num">${item.source_type}</td>
-    `;
+    tr.innerHTML=`<td class="arc-num">${item.id}</td><td class="td-title">${item.title}</td><td><span class="tag" style="font-size:7px">${item.domain}</span></td><td class="td-scene">${item.scene.slice(0,30)}…</td><td class="arc-num">${item.visibility_score}</td><td class="arc-num">${item.adopted}</td><td class="arc-num">${item.observation_method}</td><td class="arc-num">${item.emotional_intensity}</td><td class="arc-num">${item.frequency}</td><td style="font-size:8px;color:rgba(0,0,0,0.4)">${item.theory_tag}</td><td class="arc-num">${item.source_type}</td>`;
     tr.querySelector('.td-title').addEventListener('click',()=>{closePage('archive');goDetail(item);});
     tbody.appendChild(tr);
   });
@@ -655,6 +299,3 @@ function closePage(w){page='main';document.getElementById(w).classList.remove('s
 </script>
 </body>
 </html>
-     
-      
-    
