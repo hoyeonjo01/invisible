@@ -741,3 +741,12 @@ html.archive-open body {
   color: #fff !important;
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
+/*스크롤표시 안보이기*/
+#archive-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#archive-scroll::-webkit-scrollbar {
+  display: none;
+}
