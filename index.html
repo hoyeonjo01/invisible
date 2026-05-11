@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://use.typekit.net/agu3tyq.css">
+  <link rel="stylesheet" href="style.css" />
+  <title>Invisible Rules</title>
+</head>
+<body>
+  <section id="entry-page">
+    <h1 class="entry-title">Bonjour</h1>
+    <input id="bonjour-input" class="bonjour-input" type="text" autocomplete="off" spellcheck="false" autofocus />
+  </section>
+
+  <main id="main-page" class="hidden">
+    <nav id="top-nav">
+      <button id="home-btn">main</button>
+      <button id="meta-btn">archive</button>
+      <button id="clear-images-btn">clear images</button>
+      <button id="reset-view-btn">reset view</button>
+    </nav>
+
+    <section id="world-viewport">
+      <div id="world">
+        <div id="titles-layer"></div>
+        <div id="images-layer"></div>
+      </div>
+    </section>
+
+    <aside id="scene-panel" class="hidden">
+      <button id="close-panel">×</button>
+      <p id="panel-id"></p>
+      <h2 id="panel-title"></h2>
+      <p id="panel-title-ko"></p>
+      <p id="panel-scene"></p>
+      <p id="panel-rule"></p>
+    </aside>
+  </main>
+
+  <section id="archive-page" class="hidden">
+
+    <div class="archive-header">
+      <h1 class="archive-title">Archive</h1>
+      <div class="archive-right">
+        <button id="back-main-btn">back</button>
+        <div class="archive-controls">
+          <button id="sort-reset-btn">reset</button>
+          <button id="sort-visibility-btn">visibility</button>
+          <button id="sort-adopted-btn">adopted</button>
+        </div>
+      </div>
+    </div><!-- ← 여기 닫는 태그가 없었던 게 핵심 원인 -->
+
+    <div id="archive-scroll"><!-- ← 스크롤 전용 래퍼 -->
+      <div id="metadata-table"></div>
+    </div>
+
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

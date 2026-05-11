@@ -1,0 +1,704 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #ffffff;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+  
+  /* ENTRY */
+  
+  #entry-page {
+    position: fixed;
+    inset: 0;
+    background: white;
+    overflow: hidden;
+    z-index: 1000;
+  }
+  
+  #entry-page.hidden {
+    display: none;
+  }
+  
+  .entry-title {
+    margin: 0;
+    padding-left: 10px;
+    padding-top: 20px;
+  
+    font-family: Georgia, serif;
+    font-style: italic;
+  
+    font-size: 210pt;
+    font-weight: 400;
+    line-height: 0.9;
+  
+    color: black;
+    letter-spacing: -0.04em;
+  }
+  
+  .bonjour-input {
+    position: absolute;
+  
+    right: 40px;
+    bottom: 20px;
+  
+    width: auto;
+  
+    border: none;
+    outline: none;
+    background: transparent;
+  
+    font-family: Georgia, serif;
+    font-style: italic;
+  
+    font-size: 210pt;
+    font-weight: 400;
+    line-height: 1;
+  
+    text-align: right;
+  
+    color: #d9d9d9;
+    caret-color: #d9d9d9;
+  
+    padding: 0;
+    margin: 0;
+  
+    appearance: none;
+  }
+  
+  .bonjour-input::placeholder {
+    color: #d9d9d9;
+  }
+  
+  /* MAIN */
+  
+  #main-page {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: white;
+  }
+  
+  #main-page.hidden {
+    display: none;
+  }
+  
+  #viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+  
+  #world {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  
+  #titles-layer,
+  #images-layer {
+    position: absolute;
+    inset: 0;
+  }
+  
+  #images-layer {
+    z-index: 10;
+  }
+  
+  #titles-layer {
+    z-index: 20;
+  }
+  
+  .rule-title {
+    position: absolute;
+  
+    /* button 기본 스타일 제거 */
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    outline: none;
+  
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  
+    color: var(--ink);
+    white-space: nowrap;
+  
+    cursor: pointer;
+    user-select: none;
+  
+    z-index: 20;
+  }
+  
+  .rule-title:hover {
+    color: black;
+  }
+
+  .rule-title.holding {
+    opacity: 0.72;
+  }
+  
+  .rule-title.hold-ready {
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
+  }
+
+  .rule-title.dodging {
+    transition: transform 0.08s linear;
+  }
+
+  .memory-image {
+    position: absolute;
+  
+    width: var(--w);
+    height: var(--h);
+  
+    object-fit: cover;
+  
+    opacity: 0;
+  
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--r))
+      scale(0.96);
+  
+    z-index: var(--z);
+  
+    cursor: grab;
+  
+    pointer-events: auto;
+    touch-action: none;
+  
+    will-change:
+      transform,
+      opacity,
+      left,
+      top;
+  
+    transition:
+      opacity 0.18s ease-out,
+      transform 0.22s cubic-bezier(.2,.8,.2,1);
+  
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  .memory-image.visible {
+    opacity: 1;
+  
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--r))
+      scale(1);
+  }
+  
+  .memory-image.dragging {
+    cursor: grabbing;
+  
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--r))
+      scale(1.02);
+  
+    z-index: 99999 !important;
+  }
+
+
+/* TOP UI - text only, always above images */
+
+.top-left,
+.top-right,
+#top-nav {
+  position: fixed;
+  z-index: 2147483647;
+  pointer-events: auto;
+  left: 15px;
+  
+}
+
+.top-left {
+    top: 20px;
+    left: 40px;
+  
+    display: flex;
+    gap: 28px;
+  }
+
+.top-right {
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 14px;
+}
+
+button,
+.nav-button,
+#clear-images,
+#clear-images-btn,
+#reset-view-btn,
+#meta-btn,
+#home-btn,
+#back-main-btn {
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+
+  border: 1px solid rgba(0,0,0,0.22);
+
+  padding: 8px 14px;
+  margin: 0;
+
+  border-radius: 999px;
+
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+
+  color: rgba(0,0,0,0.62);
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease;
+}
+
+button:hover,
+.nav-button:hover,
+#clear-images:hover,
+#clear-images-btn:hover,
+#reset-view-btn:hover,
+#meta-btn:hover,
+#home-btn:hover,
+#back-main-btn:hover {
+  border-color: rgba(0,0,0,0.55);
+  color: black;
+}
+
+  
+  /* PANEL */
+  
+  #scene-panel {
+    position: fixed;
+  
+    right: 0;
+    bottom: 0;
+  
+    width: 420px;
+    max-width: 100vw;
+  
+    background: white;
+  
+    padding: 28px;
+  
+    z-index: 1000;
+  
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  
+    border-top: 1px solid rgba(0,0,0,0.08);
+    border-left: 1px solid rgba(0,0,0,0.08);
+  }
+  
+  #scene-panel.active {
+    transform: translateY(0);
+  }
+  
+  #panel-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  
+    border: none;
+    background: transparent;
+  
+    font-size: 18px;
+  
+    cursor: pointer;
+  }
+  
+  #panel-id {
+    font-size: 12px;
+    color: rgba(0,0,0,0.4);
+  
+    margin-bottom: 14px;
+  }
+  
+  #panel-title {
+    margin: 0 0 18px;
+  
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  
+    font-size: 56px;
+    line-height: 1;
+  
+    letter-spacing: -0.04em;
+  }
+  
+  #panel-scene {
+    font-size: 18px;
+    line-height: 1.7;
+  
+    word-break: keep-all;
+  }
+  
+  #panel-rule {
+    margin-top: 20px;
+  
+    padding-top: 16px;
+  
+    border-top: 1px solid rgba(0,0,0,0.08);
+  
+    font-size: 14px;
+    line-height: 1.6;
+  
+    color: rgba(0,0,0,0.55);
+  }
+  
+
+/* =========================
+   ARCHIVE FINAL
+========================= */
+
+#archive-page.hidden {
+  display: none !important;
+}
+
+#archive-page {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+
+  background: #fff !important;
+  color: #111 !important;
+
+  overflow-y: hidden !important;
+  padding: 0 20px 90px 20px !important;
+}
+
+#archive-scroll {
+  position: absolute;
+  top: 160px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  padding: 0 20px 90px 20px;
+}
+
+#metadata-table {
+  margin-top: 0 !important; /* 기존 390px 제거 */
+  padding-bottom: 160px !important;
+}
+
+/* HEADER AREA */
+
+#archive-page .archive-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 20px !important;
+  right: 20px !important;
+  height: 160px !important;
+
+  background: #fff !important;
+  z-index: 10000 !important;
+
+  border-bottom: 1.5px solid #111 !important;
+
+  margin: 0 !important;
+  padding: 0 20px 0 0 !important;
+
+  overflow: visible !important;
+}
+
+/* ARCHIVE TITLE */
+
+#archive-page .archive-header h1 {
+  position: absolute !important;
+  left: 0 !important;
+  top: 26px !important;
+  color: #111 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-right: 24px !important;
+
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-style: italic !important;
+  font-weight: 700 !important;
+
+  font-size: 112px !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.08em !important;
+
+  white-space: nowrap !important;
+}
+
+/* BACK BUTTON */
+
+#archive-page #back-main-btn {
+  position: fixed !important;
+  top: 26px !important;
+  right: 20px !important;
+  z-index: 10002 !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(0,0,0,0.45) !important;
+  border-radius: 0 !important;
+
+  padding: 0 0 2px 0 !important;
+  margin: 0 !important;
+
+  font-family: Helvetica, Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+
+  color: rgba(0,0,0,0.62) !important;
+  cursor: pointer !important;
+}
+
+/* SORT BUTTONS */
+
+#archive-page .archive-controls {
+  position: fixed !important;
+  top: 120px !important;
+  right: 20px !important;
+  z-index: 10002 !important;
+
+  display: flex !important;
+  gap: 38px !important;
+  align-items: center !important;
+}
+
+#archive-page .archive-controls button {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(0,0,0,0.45) !important;
+  border-radius: 0 !important;
+
+  padding: 0 0 3px 0 !important;
+  margin: 0 !important;
+
+  font-family: Helvetica, Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+
+  color: rgba(0,0,0,0.62) !important;
+  cursor: pointer !important;
+}
+
+
+/* ROW */
+
+.archive-item {
+  border-bottom: 1px solid #d8d8d8 !important;
+  cursor: pointer !important;
+}
+
+.archive-row-main {
+  display: grid !important;
+  grid-template-columns: 110px minmax(420px, 1fr) 520px !important;
+  align-items: center !important;
+  column-gap: 14px !important;
+  min-height: 78px !important;
+}
+
+.archive-id {
+  font-family: Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+  color: rgba(0,0,0,0.55) !important;
+  white-space: nowrap !important;
+}
+
+.archive-title {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+
+  font-size: 36px !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.05em !important;
+
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+/* METADATA */
+
+.archive-meta-line {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.archive-meta-line span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-height: 28px !important;
+  padding: 5px 12px !important;
+
+  border: 1px solid rgba(0,0,0,0.22) !important;
+  border-radius: 999px !important;
+
+  font-family: Helvetica, Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+
+  color: rgba(0,0,0,0.72) !important;
+  white-space: nowrap !important;
+}
+
+/* DETAIL */
+
+.archive-row-detail {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  transition: max-height 0.35s ease !important;
+}
+
+.archive-item.open .archive-row-detail {
+  max-height: 420px !important;
+}
+
+.archive-detail-inner {
+  padding: 0 0 34px 124px !important;
+  max-width: 980px !important;
+}
+
+.archive-section {
+  margin-top: 24px !important;
+}
+
+.archive-label {
+  font-family: Helvetica, Arial, sans-serif !important;
+  font-size: 12px !important;
+  letter-spacing: 0.05em !important;
+  color: rgba(0,0,0,0.35) !important;
+  margin-bottom: 10px !important;
+}
+
+.archive-section p {
+  margin: 0 !important;
+
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.8 !important;
+
+  color: rgba(0,0,0,0.86) !important;
+}
+
+html.archive-open,
+html.archive-open body {
+  overflow: auto !important;
+}
+
+.has-tip {
+  position: relative;
+}
+ 
+/* 기존 것 지우고 아래로 교체 */
+
+.has-tip::after {
+  content: attr(data-tip);
+  white-space: pre;
+
+  position: absolute;
+  top: calc(100% + 8px); /* bottom → top 으로 변경 */
+  right: 0;
+
+  background: #111;
+  color: #fff;
+
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.65;
+  font-style: normal;
+
+  padding: 9px 13px;
+  border-radius: 4px;
+
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  z-index: 99999;
+  min-width: 150px;
+  text-align: left;
+}
+
+/* 화살표도 방향 반전 */
+.has-tip::before {
+  content: '';
+  position: absolute;
+  top: calc(100% + 3px); /* bottom → top */
+  right: 14px;
+
+  border: 5px solid transparent;
+  border-bottom-color: #111; /* top-color → bottom-color */
+
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  z-index: 99999;
+}
+
+.has-tip:hover::after,
+.has-tip:hover::before {
+  opacity: 1;
+}
+/* 기본 상태 — 제목 회색 */
+.archive-title {
+  color: rgba(0, 0, 0, 0.35) !important;
+  transition: color 0.18s ease;
+}
+
+/* 호버 시 — 제목 검정 */
+.archive-item:hover .archive-title {
+  color: #111 !important;
+}
+
+/* 호버 시 — 메타 태그 검정 배경 + 흰 글씨 */
+.archive-item:hover .archive-meta-line span {
+  background: #111 !important;
+  border-color: #111 !important;
+  color: #fff !important;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
