@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://use.typekit.net/agu3tyq.css">
   <link rel="stylesheet" href="style.css" />
   <title>Invisible Rules</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
 </head>
 <body>
   <section id="entry-page">
@@ -15,7 +16,6 @@
 
   <main id="main-page" class="hidden">
     <nav id="top-nav">
-      <button id="home-btn">main</button>
       <button id="meta-btn">archive</button>
       <button id="clear-images-btn">clear images</button>
       <button id="reset-view-btn">reset view</button>
@@ -30,11 +30,18 @@
 
     <aside id="scene-panel" class="hidden">
       <button id="close-panel">×</button>
+    
       <p id="panel-id"></p>
-      <h2 id="panel-title"></h2>
       <p id="panel-title-ko"></p>
-      <p id="panel-scene"></p>
       <p id="panel-rule"></p>
+    
+      <div class="scene-title-box">
+        <h2 id="panel-title"></h2>
+      </div>
+    
+      <div class="scene-text-box">
+        <p id="panel-scene"></p>
+      </div>
     </aside>
   </main>
 

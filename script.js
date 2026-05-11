@@ -609,16 +609,34 @@ viewport.addEventListener("pointerdown", (e) => {
   viewport.classList.add("dragging");
 });
 
-// window → viewport, speed 8, stopPropagation으로 트랙패드 좌우 이동 해결
-viewport.addEventListener("wheel", (e) => {
+//  트랙패드 좌우 이동 해결
+window.addEventListener("wheel", (e) => {
+
+  // archive 열려있으면 기본 스크롤 허용
+  if (!archivePage.classList.contains("hidden")) {
+    return;
+  }
+
+  // panel 열려있으면 이동 막기
+  if (scenePanel.classList.contains("active")) {
+    return;
+  }
+
   e.preventDefault();
-  e.stopPropagation();
-  const speed = 8;
+
+  const speed = 3.2;
+
   view.x -= e.deltaX * speed;
   view.y -= e.deltaY * speed;
+
   applyView();
+
   clearTimeout(ensureTimer);
-  ensureTimer = setTimeout(() => { ensureVisibleTitles(); }, 80);
+
+  ensureTimer = setTimeout(() => {
+    ensureVisibleTitles();
+  }, 40);
+
 }, { passive: false });
 
 window.addEventListener("keydown", (e) => {
@@ -628,11 +646,11 @@ window.addEventListener("keydown", (e) => {
 });
 
 function openPanel(scene) {
-  document.getElementById("panel-id").textContent = scene.id;
   document.getElementById("panel-title").textContent = scene.title;
-  document.getElementById("panel-title-ko").textContent = scene.titleKo;
   document.getElementById("panel-scene").textContent = scene.scene;
-  document.getElementById("panel-rule").textContent = scene.rule;
+
+  mainPage.classList.add("scene-open");
+
   scenePanel.classList.remove("hidden");
   scenePanel.classList.add("active");
 }
@@ -738,12 +756,17 @@ if (backMainBtn) {
   });
 }
 
-document.getElementById("home-btn").addEventListener("click", () => {
-  archivePage.classList.add("hidden");
-  document.documentElement.classList.remove("archive-open");
-  scenePanel.classList.remove("active");
-  scenePanel.classList.add("hidden");
-});
+const homeBtn = document.getElementById("home-btn");
+
+if (homeBtn) {
+  homeBtn.addEventListener("click", () => {
+    archivePage.classList.add("hidden");
+    document.documentElement.classList.remove("archive-open");
+
+    scenePanel.classList.remove("active");
+    scenePanel.classList.add("hidden");
+  });
+}
 
 document.getElementById("clear-images-btn").addEventListener("click", () => {
   imagesLayer.innerHTML = "";
@@ -766,3 +789,22 @@ window.addEventListener("resize", resetView);
 createTitles();
 createMetadata();
 requestAnimationFrame(animateTitles);
+
+function closeScenePanel() {
+  scenePanel.classList.remove("active");
+  scenePanel.classList.add("hidden");
+  mainPage.classList.remove("scene-open");
+}
+
+document.addEventListener("click", (e) => {
+  if (!scenePanel.classList.contains("active")) return;
+
+  if (
+    e.target.closest("#scene-panel") ||
+    e.target.closest(".rule-title")
+  ) {
+    return;
+  }
+
+  closeScenePanel();
+});
