@@ -274,11 +274,12 @@ const TILE_H = 2600;
 const MIN_SCALE = 0.40;
 const MAX_SCALE = 1.65;
 
-// extra-1.jpeg ~ extra-6.jpeg 추가
 const IMAGE_POOL = [
   ...Array.from({ length: 38 }, (_, i) => `./images/FR-${String(i + 1).padStart(3, "0")}.jpeg`),
   ...Array.from({ length: 6 }, (_, i) => `./images/extra-${i + 1}.jpeg`)
 ];
+
+const traceData = [];
 
 const entryPage = document.getElementById("entry-page");
 const mainPage = document.getElementById("main-page");
@@ -299,7 +300,7 @@ let panStart = { x: 0, y: 0, vx: 0, vy: 0 };
 let activeImage = null;
 let dragRaf = null;
 let lastImageByRule = {};
-const DODGE_ATTEMPTS = 2;
+const DODGE_ATTEMPTS = 0;
 
 bonjourInput.addEventListener("input", () => {
   if (bonjourInput.value.trim().toLowerCase() === "bonjour") {
@@ -354,6 +355,7 @@ function seededPosition(index) {
   const cellH = TILE_H / rows;
   const jitterX = Math.sin(index * 12.9898) * 0.5 + 0.5;
   const jitterY = Math.sin(index * 78.233) * 0.5 + 0.5;
+
   return {
     x: col * cellW + cellW * (0.18 + jitterX * 0.64),
     y: row * cellH + cellH * (0.18 + jitterY * 0.64)
@@ -375,24 +377,32 @@ function createTitle(scene, index, tileX, tileY) {
 
   const r = Math.random();
   let fontSize;
+
   if (r < 0.15) fontSize = 26 + Math.random() * 10;
   else if (r < 0.7) fontSize = 42 + Math.random() * 22;
   else fontSize = 62 + Math.random() * 42;
+
   el.style.setProperty("--fs", `${fontSize}px`);
 
   const ink = Math.random();
   let inkValue;
+
   if (ink < 0.15) inkValue = "rgba(0,0,0,0.55)";
   else if (ink < 0.35) inkValue = "rgba(0,0,0,0.72)";
   else inkValue = "rgba(0,0,0,1)";
+
   el.style.setProperty("--ink", inkValue);
 
   const node = {
-    key, el, scene,
-    baseX: x, baseY: y,
+    key,
+    el,
+    scene,
+    baseX: x,
+    baseY: y,
     phase: index * 0.71 + tileX * 0.33 + tileY * 0.47,
     amp: 32 + (index % 7) * 9,
-    evadeX: 0, evadeY: 0,
+    evadeX: 0,
+    evadeY: 0,
     dodgeCount: 0,
     dodgeLimit: DODGE_ATTEMPTS
   };
@@ -401,8 +411,26 @@ function createTitle(scene, index, tileX, tileY) {
   let holdReady = false;
 
   el.addEventListener("mouseenter", (e) => {
-    // 1~2장 랜덤 스폰
+    const p = screenToWorld(e.clientX, e.clientY);
+
+    const traceImage = pickImage(scene);
+
+    traceData.push({
+      type: "hover",
+      id: scene.id,
+      title: scene.title,
+      sceneText: scene.scene,
+      image: traceImage,
+      x: e.clientX,
+      y: e.clientY,
+      worldX: p.x,
+      worldY: p.y,
+      order: traceData.length + 1,
+      time: Date.now()
+    });
+
     const count = Math.floor(Math.random() * 2) + 1;
+
     for (let i = 0; i < count; i++) {
       setTimeout(() => spawnMemoryImage(scene, e), i * 80);
     }
@@ -415,6 +443,7 @@ function createTitle(scene, index, tileX, tileY) {
 
     holdReady = false;
     el.classList.add("holding");
+
     holdTimer = setTimeout(() => {
       holdReady = true;
       el.classList.add("hold-ready");
@@ -430,7 +459,25 @@ function createTitle(scene, index, tileX, tileY) {
 
   el.addEventListener("click", (e) => {
     e.stopPropagation();
+
     if (!holdReady) return;
+
+    const p = screenToWorld(e.clientX, e.clientY);
+
+    traceData.push({
+      type: "click",
+      id: scene.id,
+      title: scene.title,
+      sceneText: scene.scene,
+      image: lastImageByRule[scene.id] || pickImage(scene),
+      x: e.clientX,
+      y: e.clientY,
+      worldX: p.x,
+      worldY: p.y,
+      order: traceData.length + 1,
+      time: Date.now()
+    });
+
     openPanel(scene);
   });
 
@@ -446,38 +493,49 @@ function dodgeTitle(node, event) {
   const dist = Math.max(1, Math.hypot(vx, vy));
   const force = 180 + Math.random() * 120;
   const side = Math.random() > 0.5 ? 1 : -1;
+
   node.evadeX = (vx / dist) * force + (-vy / dist) * force * 0.45 * side;
   node.evadeY = (vy / dist) * force + (vx / dist) * force * 0.45 * side;
+
   node.el.classList.add("dodging");
   setTimeout(() => node.el.classList.remove("dodging"), 280);
 }
 
 function ensureVisibleTitles() {
   if (!titlesLayer) return;
+
   const left = -view.x / view.scale;
   const top = -view.y / view.scale;
   const right = left + window.innerWidth / view.scale;
   const bottom = top + window.innerHeight / view.scale;
+
   const minTileX = Math.floor(left / TILE_W) - 1;
   const maxTileX = Math.floor(right / TILE_W) + 1;
   const minTileY = Math.floor(top / TILE_H) - 1;
   const maxTileY = Math.floor(bottom / TILE_H) + 1;
+
   const needed = new Set();
+
   for (let tx = minTileX; tx <= maxTileX; tx++) {
     for (let ty = minTileY; ty <= maxTileY; ty++) {
       scenes.forEach((scene, index) => {
         const key = `${tx}:${ty}:${scene.id}`;
         needed.add(key);
-        if (!titleMap.has(key)) createTitle(scene, index, tx, ty);
+
+        if (!titleMap.has(key)) {
+          createTitle(scene, index, tx, ty);
+        }
       });
     }
   }
+
   for (const [key, node] of titleMap.entries()) {
     if (!needed.has(key)) {
       node.el.remove();
       titleMap.delete(key);
     }
   }
+
   titleNodes = titleNodes.filter(node => titleMap.has(node.key));
 }
 
@@ -490,26 +548,25 @@ function createTitles() {
 
 function animateTitles(t) {
   titleNodes.forEach((d) => {
-    const dx =
-      Math.sin(t * 0.00034 + d.phase) * d.amp +
-      Math.sin(t * 0.00011 + d.phase * 2.1) * d.amp * 0.45;
-    const dy =
-      Math.cos(t * 0.00029 + d.phase * 1.4) * d.amp * 0.8 +
-      Math.sin(t * 0.00013 + d.phase * 0.7) * d.amp * 0.35;
     d.evadeX *= 0.94;
     d.evadeY *= 0.94;
+
     d.el.style.transform =
-      `translate(calc(-50% + ${dx + d.evadeX}px), calc(-50% + ${dy + d.evadeY}px))`;
+      `translate(calc(-50% + ${d.evadeX}px), calc(-50% + ${d.evadeY}px))`;
   });
+
   requestAnimationFrame(animateTitles);
 }
 
 function pickImage(scene) {
   let img;
+
   for (let i = 0; i < 8; i++) {
     img = IMAGE_POOL[Math.floor(Math.random() * IMAGE_POOL.length)];
+
     if (img !== lastImageByRule[scene.id]) break;
   }
+
   lastImageByRule[scene.id] = img;
   return img;
 }
@@ -517,6 +574,7 @@ function pickImage(scene) {
 function spawnMemoryImage(scene, event) {
   const p = screenToWorld(event.clientX, event.clientY);
   const img = document.createElement("img");
+
   img.className = "memory-image";
   img.src = pickImage(scene);
   img.alt = "";
@@ -524,9 +582,17 @@ function spawnMemoryImage(scene, event) {
 
   const scaleType = Math.random();
   let w, h;
-  if (scaleType < 0.25) { w = 140 + Math.random() * 120; h = 100 + Math.random() * 100; }
-  else if (scaleType < 0.75) { w = 280 + Math.random() * 260; h = 200 + Math.random() * 220; }
-  else { w = 760 + Math.random() * 520; h = 520 + Math.random() * 420; }
+
+  if (scaleType < 0.25) {
+    w = 140 + Math.random() * 120;
+    h = 100 + Math.random() * 100;
+  } else if (scaleType < 0.75) {
+    w = 280 + Math.random() * 260;
+    h = 200 + Math.random() * 220;
+  } else {
+    w = 760 + Math.random() * 520;
+    h = 520 + Math.random() * 420;
+  }
 
   img.style.setProperty("--w", `${w}px`);
   img.style.setProperty("--h", `${h}px`);
@@ -537,53 +603,76 @@ function spawnMemoryImage(scene, event) {
 
   img.addEventListener("pointerdown", startImageDrag);
   img.addEventListener("dblclick", () => openPanel(scene));
-  img.onerror = () => { img.style.display = "none"; };
+  img.onerror = () => {
+    img.style.display = "none";
+  };
 
   imagesLayer.appendChild(img);
-  requestAnimationFrame(() => { img.classList.add("visible"); });
+
+  requestAnimationFrame(() => {
+    img.classList.add("visible");
+  });
 }
 
 function startImageDrag(e) {
   e.preventDefault();
   e.stopPropagation();
+
   const img = e.currentTarget;
+
   img.style.zIndex = ++zCounter;
   img.classList.add("dragging");
+
   const startPointer = screenToWorld(e.clientX, e.clientY);
   const startLeft = parseFloat(img.style.left) || 0;
   const startTop = parseFloat(img.style.top) || 0;
+
   function onMove(ev) {
     ev.preventDefault();
+
     const nowPointer = screenToWorld(ev.clientX, ev.clientY);
+
     img.style.left = `${startLeft + nowPointer.x - startPointer.x}px`;
     img.style.top = `${startTop + nowPointer.y - startPointer.y}px`;
   }
+
   function onUp() {
     img.classList.remove("dragging");
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
   }
+
   window.addEventListener("pointermove", onMove, { passive: false });
   window.addEventListener("pointerup", onUp);
 }
 
 function smoothImageDrag() {
-  if (!activeImage) { dragRaf = null; return; }
+  if (!activeImage) {
+    dragRaf = null;
+    return;
+  }
+
   activeImage.currentLeft += (activeImage.targetLeft - activeImage.currentLeft) * 0.45;
   activeImage.currentTop += (activeImage.targetTop - activeImage.currentTop) * 0.45;
+
   activeImage.img.style.left = `${activeImage.currentLeft}px`;
   activeImage.img.style.top = `${activeImage.currentTop}px`;
+
   dragRaf = requestAnimationFrame(smoothImageDrag);
 }
 
 window.addEventListener("pointermove", (e) => {
   if (activeImage) {
     const now = screenToWorld(e.clientX, e.clientY);
+
     activeImage.targetLeft = activeImage.left + now.x - activeImage.start.x;
     activeImage.targetTop = activeImage.top + now.y - activeImage.start.y;
+
     if (!dragRaf) dragRaf = requestAnimationFrame(smoothImageDrag);
+
     return;
   }
+
   if (isPanning) {
     view.x = panStart.vx + (e.clientX - panStart.x);
     view.y = panStart.vy + (e.clientY - panStart.y);
@@ -593,6 +682,7 @@ window.addEventListener("pointermove", (e) => {
 
 window.addEventListener("pointerup", () => {
   if (activeImage) activeImage.img.classList.remove("dragging");
+
   activeImage = null;
   isPanning = false;
   viewport.classList.remove("dragging");
@@ -604,23 +694,15 @@ viewport.addEventListener("pointerdown", (e) => {
     e.target.closest(".memory-image") ||
     e.target.closest("#top-nav")
   ) return;
+
   isPanning = true;
   panStart = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
   viewport.classList.add("dragging");
 });
 
-//  트랙패드 좌우 이동 해결
 window.addEventListener("wheel", (e) => {
-
-  // archive 열려있으면 기본 스크롤 허용
-  if (!archivePage.classList.contains("hidden")) {
-    return;
-  }
-
-  // panel 열려있으면 이동 막기
-  if (scenePanel.classList.contains("active")) {
-    return;
-  }
+  if (!archivePage.classList.contains("hidden")) return;
+  if (scenePanel.classList.contains("active")) return;
 
   e.preventDefault();
 
@@ -636,13 +718,20 @@ window.addEventListener("wheel", (e) => {
   ensureTimer = setTimeout(() => {
     ensureVisibleTitles();
   }, 40);
-
 }, { passive: false });
 
 window.addEventListener("keydown", (e) => {
-  if (e.key === "+" || e.key === "=") zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.12);
-  if (e.key === "-" || e.key === "_") zoomAt(window.innerWidth / 2, window.innerHeight / 2, 0.88);
-  if (e.key === "0") resetView();
+  if (e.key === "+" || e.key === "=") {
+    zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.12);
+  }
+
+  if (e.key === "-" || e.key === "_") {
+    zoomAt(window.innerWidth / 2, window.innerHeight / 2, 0.88);
+  }
+
+  if (e.key === "0") {
+    resetView();
+  }
 });
 
 function openPanel(scene) {
@@ -657,70 +746,81 @@ function openPanel(scene) {
 
 const TOOLTIP = {
   observation_method: {
-    '경험': '내가 직접 체험하며 발견한 규칙',
-    '목격': '타인의 행동을 관찰하며 발견한 규칙'
+    "경험": "내가 직접 체험하며 발견한 규칙",
+    "목격": "타인의 행동을 관찰하며 발견한 규칙"
   },
   adopted: {
-    '낯섦':   '낯섦 · 20점\n규칙의 존재를 인지하지 못했거나\n충격으로 받아들임',
-    '인지':   '인지 · 40점\n규칙이 있다는 걸 알게 됐지만\n거리감이 있음',
-    '수용':   '수용 · 65점\n규칙을 이해하고 상황에 따라\n따르게 됨',
-    '내면화': '내면화 · 85점\n의식하지 않아도\n자연스럽게 따름',
-    '해당없음': '직접 경험하지 않아\n적응도 측정 불가'
+    "낯섦": "낯섦 · 20점\n규칙의 존재를 인지하지 못했거나\n충격으로 받아들임",
+    "인지": "인지 · 40점\n규칙이 있다는 걸 알게 됐지만\n거리감이 있음",
+    "수용": "수용 · 65점\n규칙을 이해하고 상황에 따라\n따르게 됨",
+    "내면화": "내면화 · 85점\n의식하지 않아도\n자연스럽게 따름",
+    "해당없음": "직접 경험하지 않아\n적응도 측정 불가"
   },
   theory_tag: {
-    'Hall':               'Edward T. Hall\n고맥락/저맥락 문화\n시간·공간 개념',
-    'Hofstede':           'Geert Hofstede\n개인주의/집단주의\n권력거리 등 문화 차원',
-    'Foucault':           'Michel Foucault\n규율·권력·신체에 관한 담론',
-    'Foucault, Hofstede': 'Foucault + Hofstede\n신체 규범과 문화적 차원'
+    "Hall": "Edward T. Hall\n고맥락/저맥락 문화\n시간·공간 개념",
+    "Hofstede": "Geert Hofstede\n개인주의/집단주의\n권력거리 등 문화 차원",
+    "Foucault": "Michel Foucault\n규율·권력·신체에 관한 담론",
+    "Foucault, Hofstede": "Foucault + Hofstede\n신체 규범과 문화적 차원"
   },
   domain: {
-    'WORK':  '업무 · 행정',
-    'BODY':  '신체 · 외모',
-    'SPACE': '공간 · 이동',
-    'LANG':  '언어 · 소통',
-    'FOOD':  '식사 · 음식',
-    'TIME':  '시간 · 일정'
+    "WORK": "업무 · 행정",
+    "BODY": "신체 · 외모",
+    "SPACE": "공간 · 이동",
+    "LANG": "언어 · 소통",
+    "FOOD": "식사 · 음식",
+    "TIME": "시간 · 일정"
   }
 };
 
 function createMetadata(sortType = "default") {
   const table = document.getElementById("metadata-table");
+
   table.innerHTML = "";
+
   let orderedScenes = [...scenes];
+
   if (sortType === "visibility") {
     orderedScenes.sort((a, b) => Number(b.visibility_score) - Number(a.visibility_score));
   }
+
   if (sortType === "adopted") {
     orderedScenes.sort((a, b) => {
       const scoreA = Number(a.adopted_score);
       const scoreB = Number(b.adopted_score);
+
       if (Number.isNaN(scoreA) && Number.isNaN(scoreB)) return 0;
       if (Number.isNaN(scoreA)) return 1;
       if (Number.isNaN(scoreB)) return -1;
+
       return scoreB - scoreA;
     });
   }
+
   orderedScenes.forEach((scene) => {
     const item = document.createElement("article");
+
     item.className = "archive-item";
+
     item.innerHTML = `
       <div class="archive-row-main">
         <div class="archive-id">${scene.id}</div>
         <div class="archive-title">${scene.title}</div>
         <div class="archive-meta-line">
-          <span class="has-tip" data-tip="${TOOLTIP.observation_method[scene.observation_method] || ''}">${scene.observation_method}</span>
+          <span class="has-tip" data-tip="${TOOLTIP.observation_method[scene.observation_method] || ""}">${scene.observation_method}</span>
           <span class="has-tip" data-tip="가시성 점수 ${scene.visibility_score}/100&#10;인식 시점 + 행동 가시성&#10;+ 언어화 가능성의 합산">${scene.visibility_score}</span>
-          <span class="has-tip" data-tip="${(TOOLTIP.adopted[scene.adopted] || '').replace(/\n/g, '&#10;')}">${scene.adopted}</span>
-          <span class="has-tip" data-tip="${(TOOLTIP.theory_tag[scene.theory_tag] || '').replace(/\n/g, '&#10;')}">${scene.theory_tag}</span>
-          <span class="has-tip" data-tip="${TOOLTIP.domain[scene.domain] || ''}">${scene.domain}</span>
+          <span class="has-tip" data-tip="${(TOOLTIP.adopted[scene.adopted] || "").replace(/\n/g, "&#10;")}">${scene.adopted}</span>
+          <span class="has-tip" data-tip="${(TOOLTIP.theory_tag[scene.theory_tag] || "").replace(/\n/g, "&#10;")}">${scene.theory_tag}</span>
+          <span class="has-tip" data-tip="${TOOLTIP.domain[scene.domain] || ""}">${scene.domain}</span>
         </div>
       </div>
+
       <div class="archive-row-detail">
         <div class="archive-detail-inner">
           <div class="archive-section">
             <div class="archive-label">SCENE</div>
             <p>${scene.scene}</p>
           </div>
+
           <div class="archive-section">
             <div class="archive-label">RULE</div>
             <p>${scene.rule}</p>
@@ -728,7 +828,11 @@ function createMetadata(sortType = "default") {
         </div>
       </div>
     `;
-    item.addEventListener("click", () => { item.classList.toggle("open"); });
+
+    item.addEventListener("click", () => {
+      item.classList.toggle("open");
+    });
+
     table.appendChild(item);
   });
 }
@@ -740,8 +844,10 @@ if (metaBtn) {
   metaBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     archivePage.classList.remove("hidden");
     archivePage.classList.add("active");
+
     document.documentElement.classList.add("archive-open");
   });
 }
@@ -750,27 +856,25 @@ if (backMainBtn) {
   backMainBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     archivePage.classList.add("hidden");
     archivePage.classList.remove("active");
+
     document.documentElement.classList.remove("archive-open");
-  });
-}
-
-const homeBtn = document.getElementById("home-btn");
-
-if (homeBtn) {
-  homeBtn.addEventListener("click", () => {
-    archivePage.classList.add("hidden");
-    document.documentElement.classList.remove("archive-open");
-
-    scenePanel.classList.remove("active");
-    scenePanel.classList.add("hidden");
   });
 }
 
 document.getElementById("clear-images-btn").addEventListener("click", () => {
   imagesLayer.innerHTML = "";
   zCounter = 20;
+
+  traceData.length = 0;
+
+  const traceLayer = document.getElementById("print-trace");
+
+  if (traceLayer) {
+    traceLayer.innerHTML = "";
+  }
 });
 
 document.getElementById("reset-view-btn").addEventListener("click", resetView);
@@ -808,3 +912,86 @@ document.addEventListener("click", (e) => {
 
   closeScenePanel();
 });
+
+function buildPrintTrace() {
+  const traceLayer = document.getElementById("print-trace");
+
+  if (!traceLayer) return;
+
+  traceLayer.innerHTML = "";
+
+  if (traceData.length === 0) return;
+
+  const printW = 210;
+  const printH = 297;
+
+  const xs = traceData.map(d => d.worldX).filter(Number.isFinite);
+  const ys = traceData.map(d => d.worldY).filter(Number.isFinite);
+
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  const rangeX = Math.max(1, maxX - minX);
+  const rangeY = Math.max(1, maxY - minY);
+
+  const clickedIds = new Set(
+    traceData
+      .filter(item => item.type === "click")
+      .map(item => item.id)
+  );
+
+  const printedTextIds = new Set();
+  const printedImageCount = new Map();
+
+  traceData.forEach((item, index) => {
+    const currentCount = printedImageCount.get(item.id) || 0;
+
+    if (currentCount >= 2) return;
+
+    printedImageCount.set(item.id, currentCount + 1);
+
+    const block = document.createElement("div");
+
+    const isClickedRule = clickedIds.has(item.id);
+
+    block.className = `trace-block ${item.type} ${isClickedRule ? "clicked-rule" : ""}`;
+
+    const left = 6 + ((item.worldX - minX) / rangeX) * (printW - 12);
+    const top = 8 + ((item.worldY - minY) / rangeY) * (printH - 16);
+
+    block.style.left = `${left}mm`;
+    block.style.top = `${top}mm`;
+    block.style.zIndex = index;
+
+    const shouldPrintText = !printedTextIds.has(item.id);
+
+    if (shouldPrintText) {
+      printedTextIds.add(item.id);
+    }
+
+    block.innerHTML = `
+      <img src="${item.image}">
+      ${
+        shouldPrintText
+          ? `
+            <div class="trace-text">
+              <p class="trace-order">${item.order}</p>
+              <h2>${item.title}</h2>
+              ${
+                isClickedRule
+                  ? `<p class="trace-scene">${item.sceneText}</p>`
+                  : ""
+              }
+            </div>
+          `
+          : ""
+      }
+    `;
+
+    traceLayer.appendChild(block);
+  });
+}
+
+window.addEventListener("beforeprint", buildPrintTrace);
