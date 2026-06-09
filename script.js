@@ -425,6 +425,8 @@ function createTitle(scene, index, tileX, tileY) {
       y: e.clientY,
       worldX: p.x,
       worldY: p.y,
+      viewportW: window.innerWidth,
+      viewportH: window.innerHeight,
       order: traceData.length + 1,
       time: Date.now()
     });
@@ -474,6 +476,8 @@ function createTitle(scene, index, tileX, tileY) {
       y: e.clientY,
       worldX: p.x,
       worldY: p.y,
+      viewportW: window.innerWidth,
+      viewportH: window.innerHeight,
       order: traceData.length + 1,
       time: Date.now()
     });
@@ -915,79 +919,83 @@ document.addEventListener("click", (e) => {
 
 function buildPrintTrace() {
   const traceLayer = document.getElementById("print-trace");
-
   if (!traceLayer) return;
 
   traceLayer.innerHTML = "";
-
   if (traceData.length === 0) return;
 
-  const printW = 210;
+  const printW = 420;
   const printH = 297;
 
-  const xs = traceData.map(d => d.worldX).filter(Number.isFinite);
-  const ys = traceData.map(d => d.worldY).filter(Number.isFinite);
+  const hoverItems = traceData.filter(item => item.type === "hover");
+  const clickItems = traceData.filter(item => item.type === "click");
 
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
+  const printItems = [
+    ...hoverItems,
+    ...clickItems
+  ];
 
-  const rangeX = Math.max(1, maxX - minX);
-  const rangeY = Math.max(1, maxY - minY);
+  const baseW =
+    printItems[0]?.viewportW ||
+    window.innerWidth;
 
-  const clickedIds = new Set(
-    traceData
-      .filter(item => item.type === "click")
-      .map(item => item.id)
-  );
+  const baseH =
+    printItems[0]?.viewportH ||
+    window.innerHeight;
 
-  const printedTextIds = new Set();
-  const printedImageCount = new Map();
+  const scaleX = printW / baseW;
+  const scaleY = printH / baseH;
 
-  traceData.forEach((item, index) => {
-    const currentCount = printedImageCount.get(item.id) || 0;
+  const hoverImageCount = new Map();
 
-    if (currentCount >= 2) return;
+  printItems.forEach((item, index) => {
+    if (!Number.isFinite(item.x) || !Number.isFinite(item.y)) return;
 
-    printedImageCount.set(item.id, currentCount + 1);
+    if (item.type === "hover") {
+      const currentCount = hoverImageCount.get(item.id) || 0;
+
+      if (currentCount >= 3) return;
+
+      hoverImageCount.set(item.id, currentCount + 1);
+    }
 
     const block = document.createElement("div");
 
-    const isClickedRule = clickedIds.has(item.id);
+    block.classList.add("trace-block");
+    block.classList.add(item.type);
 
-    block.className = `trace-block ${item.type} ${isClickedRule ? "clicked-rule" : ""}`;
-
-    const left = 6 + ((item.worldX - minX) / rangeX) * (printW - 12);
-    const top = 8 + ((item.worldY - minY) / rangeY) * (printH - 16);
+    const left = item.x * scaleX;
+    const top = item.y * scaleY;
 
     block.style.left = `${left}mm`;
     block.style.top = `${top}mm`;
-    block.style.zIndex = index;
 
-    const shouldPrintText = !printedTextIds.has(item.id);
+    if (item.type === "hover") {
+      const hoverIndex = hoverItems.indexOf(item);
+      const hoverTotal = Math.max(1, hoverItems.length - 1);
 
-    if (shouldPrintText) {
-      printedTextIds.add(item.id);
+      const opacity =
+        0.20 +
+        (hoverIndex / hoverTotal) *
+        (0.65 - 0.20);
+
+      block.style.opacity = opacity.toFixed(3);
+      block.style.zIndex = index + 1;
+    } else {
+      block.style.opacity = "1";
+      block.style.zIndex = "8000";
     }
 
     block.innerHTML = `
       <img src="${item.image}">
-      ${
-        shouldPrintText
-          ? `
-            <div class="trace-text">
-              <p class="trace-order">${item.order}</p>
-              <h2>${item.title}</h2>
-              ${
-                isClickedRule
-                  ? `<p class="trace-scene">${item.sceneText}</p>`
-                  : ""
-              }
-            </div>
-          `
-          : ""
-      }
+      <div class="trace-text">
+        <h2>${item.title}</h2>
+        ${
+          item.type === "click"
+            ? `<p class="trace-scene">${item.sceneText}</p>`
+            : ""
+        }
+      </div>
     `;
 
     traceLayer.appendChild(block);

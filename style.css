@@ -31,7 +31,7 @@
     padding-left: 10px;
     padding-top: 20px;
   
-    font-family: Georgia, serif;
+    font-family: "Cormorant Garamond", serif;
     font-style: italic;
   
     font-size: 210pt;
@@ -54,7 +54,7 @@
     outline: none;
     background: transparent;
   
-    font-family: Georgia, serif;
+    font-family: "Cormorant Garamond", serif;
     font-style: italic;
   
     font-size: 210pt;
@@ -129,10 +129,10 @@
     margin: 0;
     outline: none;
   
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Cormorant Garamond", serif;
     font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs);
+    font-weight: 700;
+    font-size: calc(var(--fs) * 1.18);
     line-height: 0.95;
     letter-spacing: -0.04em;
   
@@ -360,9 +360,9 @@ button:hover,
 #panel-title {
   margin: 0;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Cormorant Garamond", serif;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 700;
 
   font-size: 52px;
   line-height: 1.05;
@@ -399,7 +399,8 @@ button:hover,
 #panel-scene {
   margin: 0;
 
-  font-family: "Pretendard Variable", sans-serif;
+  font-family: "Noto Serif KR", serif;
+  font-weight: 400;
   font-size: 31px;
   line-height: 1.45;
   font-weight: 450;
@@ -486,7 +487,7 @@ button:hover,
   padding: 0 !important;
   padding-right: 24px !important;
 
-  font-family: Georgia, "Times New Roman", serif !important;
+  font-family: "Cormorant Garamond", serif !important;
   font-style: italic !important;
   font-weight: 700 !important;
 
@@ -583,11 +584,11 @@ button:hover,
 }
 
 .archive-title {
-  font-family: Georgia, "Times New Roman", serif !important;
+  font-family: "Cormorant Garamond", serif !important;
   font-style: italic !important;
-  font-weight: 400 !important;
+  font-weight: 700 !important;
 
-  font-size: 36px !important;
+  font-size: 46px !important;
   line-height: 0.95 !important;
   letter-spacing: -0.05em !important;
 
@@ -656,7 +657,7 @@ button:hover,
 .archive-section p {
   margin: 0 !important;
 
-  font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif !important;
+  font-family: "Noto Serif KR", serif !important;
   font-size: 18px !important;
   line-height: 1.8 !important;
 
@@ -748,5 +749,9 @@ html.archive-open body {
 }
 
 #archive-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+#print-trace {
   display: none;
 }
