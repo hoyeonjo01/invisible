@@ -973,30 +973,34 @@ function buildPrintTrace() {
     if (item.type === "hover") {
       const hoverIndex = hoverItems.indexOf(item);
       const hoverTotal = Math.max(1, hoverItems.length - 1);
-
+    
       const opacity =
         0.20 +
         (hoverIndex / hoverTotal) *
-        (0.65 - 0.20);
-
+        (0.55 - 0.20);
+    
       block.style.opacity = opacity.toFixed(3);
       block.style.zIndex = index + 1;
+    
     } else {
-      block.style.opacity = "1";
-      block.style.zIndex = "8000";
+    
+      /* 클릭 이미지 */
+    
+      block.style.opacity = "0.85";
+      block.style.zIndex = "9999";
     }
 
     block.innerHTML = `
-      <img src="${item.image}">
-      <div class="trace-text">
-        <h2>${item.title}</h2>
-        ${
-          item.type === "click"
-            ? `<p class="trace-scene">${item.sceneText}</p>`
-            : ""
-        }
-      </div>
-    `;
+  <img src="${item.image}">
+  <div class="trace-text">
+    <h2 style="opacity:1;">${item.title}</h2>
+    ${
+      item.type === "click"
+        ? `<p class="trace-scene" style="opacity:1;">${item.sceneText}</p>`
+        : ""
+    }
+  </div>
+`;
 
     traceLayer.appendChild(block);
   });
