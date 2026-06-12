@@ -414,9 +414,15 @@ function createTitle(scene, index, tileX, tileY) {
     const p = screenToWorld(e.clientX, e.clientY);
 
     const traceImage = pickImage(scene);
+    const tracePrintW = 180 + Math.random() * 220;
+    const tracePrintH = 130 + Math.random() * 180;
+    const tracePrintR = (Math.random() * 12 - 6).toFixed(2);
 
     traceData.push({
       type: "hover",
+      printW: tracePrintW,
+      printH: tracePrintH,
+      printR: tracePrintR,
       id: scene.id,
       title: scene.title,
       sceneText: scene.scene,
@@ -598,9 +604,15 @@ function spawnMemoryImage(scene, event) {
     h = 520 + Math.random() * 420;
   }
 
+  const rotation = (Math.random() * 12 - 6).toFixed(2);
+
   img.style.setProperty("--w", `${w}px`);
   img.style.setProperty("--h", `${h}px`);
-  img.style.setProperty("--r", `${(Math.random() * 12 - 6).toFixed(2)}deg`);
+  img.style.setProperty("--r", `${rotation}deg`);
+
+  img.dataset.printW = w;
+  img.dataset.printH = h;
+  img.dataset.printR = rotation;
   img.style.setProperty("--z", ++zCounter);
   img.style.left = `${p.x + Math.random() * 120 - 60}px`;
   img.style.top = `${p.y + Math.random() * 100 - 50}px`;
@@ -969,6 +981,24 @@ function buildPrintTrace() {
 
     block.style.left = `${left}mm`;
     block.style.top = `${top}mm`;
+    const pxToMm = 0.18;
+
+    const rawW = item.printW || (item.type === "click" ? 420 : 220);
+    const rawH = item.printH || (item.type === "click" ? 300 : 160);
+
+    const maxW = item.type === "click" ? 82 : 42;
+    const maxH = item.type === "click" ? 60 : 42;
+
+   let wMm = rawW * pxToMm;
+   let hMm = rawH * pxToMm;
+
+    const fit = Math.min(1, maxW / wMm, maxH / hMm);
+
+   wMm *= fit;
+   hMm *= fit;
+
+  block.style.width = `${wMm}mm`;
+  block.style.height = `${hMm}mm`;
 
     if (item.type === "hover") {
       const hoverIndex = hoverItems.indexOf(item);

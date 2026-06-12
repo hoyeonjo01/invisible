@@ -37,17 +37,9 @@
     mix-blend-mode: multiply;
   }
 
-  .trace-block.hover {
-    width: 34mm;
-  }
-
-  .trace-block.click {
-    width: 74mm;
-  }
-
   .trace-block img {
     width: 100%;
-    height: 48mm;
+    height: 100%;
     object-fit: cover;
     display: block;
     filter: grayscale(100%) contrast(0.92);
