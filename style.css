@@ -500,10 +500,10 @@ button:hover,
 
 /* BACK BUTTON */
 
-#archive-page #back-main-btn {
+#archive-page #back-main-btn,
+#archive-page #archive-print-btn {
   position: fixed !important;
   top: 26px !important;
-  right: 20px !important;
   z-index: 10002 !important;
 
   appearance: none !important;
@@ -524,6 +524,14 @@ button:hover,
 
   color: rgba(0,0,0,0.62) !important;
   cursor: pointer !important;
+}
+
+#archive-page #back-main-btn {
+  right: 20px !important;
+}
+
+#archive-page #archive-print-btn {
+  right: 80px !important;
 }
 
 /* SORT BUTTONS */

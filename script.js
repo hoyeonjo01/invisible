@@ -275,8 +275,8 @@ const MIN_SCALE = 0.40;
 const MAX_SCALE = 1.65;
 
 const IMAGE_POOL = [
-  ...Array.from({ length: 38 }, (_, i) => `./images/FR-${String(i + 1).padStart(3, "0")}.jpeg`),
-  ...Array.from({ length: 6 }, (_, i) => `./images/extra-${i + 1}.jpeg`)
+  ...Array.from({ length: 38 }, (_, i) => `./images/FR-${String(i + 1).padStart(3, "0")}.jpeg`)
+  
 ];
 
 const traceData = [];
@@ -414,15 +414,26 @@ function createTitle(scene, index, tileX, tileY) {
     const p = screenToWorld(e.clientX, e.clientY);
 
     const traceImage = pickImage(scene);
-    const tracePrintW = 180 + Math.random() * 220;
-    const tracePrintH = 130 + Math.random() * 180;
-    const tracePrintR = (Math.random() * 12 - 6).toFixed(2);
+
+    const scaleType = Math.random();
+    let tracePrintW;
+    let tracePrintH;
+
+    if (scaleType < 0.25) {
+      tracePrintW = 140 + Math.random() * 120;
+      tracePrintH = 100 + Math.random() * 100;
+    } else if (scaleType < 0.75) {
+      tracePrintW = 280 + Math.random() * 260;
+      tracePrintH = 200 + Math.random() * 220;
+    } else {
+      tracePrintW = 760 + Math.random() * 520;
+      tracePrintH = 520 + Math.random() * 420;
+    }
 
     traceData.push({
       type: "hover",
       printW: tracePrintW,
       printH: tracePrintH,
-      printR: tracePrintR,
       id: scene.id,
       title: scene.title,
       sceneText: scene.scene,
@@ -472,8 +483,17 @@ function createTitle(scene, index, tileX, tileY) {
 
     const p = screenToWorld(e.clientX, e.clientY);
 
+    const lastImg = Array.from(
+      document.querySelectorAll(`.memory-image[data-id="${scene.id}"]`)
+    ).at(-1);
+
+    const clickPrintW = lastImg ? Number(lastImg.dataset.printW) : 520;
+    const clickPrintH = lastImg ? Number(lastImg.dataset.printH) : 360;
+
     traceData.push({
       type: "click",
+      printW: clickPrintW,
+      printH: clickPrintH,
       id: scene.id,
       title: scene.title,
       sceneText: scene.scene,
@@ -609,11 +629,11 @@ function spawnMemoryImage(scene, event) {
   img.style.setProperty("--w", `${w}px`);
   img.style.setProperty("--h", `${h}px`);
   img.style.setProperty("--r", `${rotation}deg`);
+  img.style.setProperty("--z", ++zCounter);
 
   img.dataset.printW = w;
   img.dataset.printH = h;
-  img.dataset.printR = rotation;
-  img.style.setProperty("--z", ++zCounter);
+
   img.style.left = `${p.x + Math.random() * 120 - 60}px`;
   img.style.top = `${p.y + Math.random() * 100 - 50}px`;
 
@@ -942,18 +962,10 @@ function buildPrintTrace() {
   const hoverItems = traceData.filter(item => item.type === "hover");
   const clickItems = traceData.filter(item => item.type === "click");
 
-  const printItems = [
-    ...hoverItems,
-    ...clickItems
-  ];
+  const printItems = [...hoverItems, ...clickItems];
 
-  const baseW =
-    printItems[0]?.viewportW ||
-    window.innerWidth;
-
-  const baseH =
-    printItems[0]?.viewportH ||
-    window.innerHeight;
+  const baseW = printItems[0]?.viewportW || window.innerWidth;
+  const baseH = printItems[0]?.viewportH || window.innerHeight;
 
   const scaleX = printW / baseW;
   const scaleY = printH / baseH;
@@ -965,75 +977,116 @@ function buildPrintTrace() {
 
     if (item.type === "hover") {
       const currentCount = hoverImageCount.get(item.id) || 0;
-
       if (currentCount >= 3) return;
-
       hoverImageCount.set(item.id, currentCount + 1);
     }
 
     const block = document.createElement("div");
-
-    block.classList.add("trace-block");
-    block.classList.add(item.type);
+    block.classList.add("trace-block", item.type);
 
     const left = item.x * scaleX;
     const top = item.y * scaleY;
 
     block.style.left = `${left}mm`;
     block.style.top = `${top}mm`;
-    const pxToMm = 0.18;
 
-    const rawW = item.printW || (item.type === "click" ? 420 : 220);
-    const rawH = item.printH || (item.type === "click" ? 300 : 160);
+    const rawW = Number(item.printW) || (item.type === "click" ? 520 : 280);
+    const rawH = Number(item.printH) || (item.type === "click" ? 360 : 200);
 
-    const maxW = item.type === "click" ? 82 : 42;
-    const maxH = item.type === "click" ? 60 : 42;
+    const pxToMm = item.type === "click" ? 0.13 : 0.095;
 
-   let wMm = rawW * pxToMm;
-   let hMm = rawH * pxToMm;
+    let wMm = rawW * pxToMm;
+    let hMm = rawH * pxToMm;
+
+    const maxW = item.type === "click" ? 92 : 58;
+    const maxH = item.type === "click" ? 68 : 52;
+    const minW = item.type === "click" ? 46 : 24;
+    const minH = item.type === "click" ? 32 : 18;
 
     const fit = Math.min(1, maxW / wMm, maxH / hMm);
 
-   wMm *= fit;
-   hMm *= fit;
+    wMm *= fit;
+    hMm *= fit;
 
-  block.style.width = `${wMm}mm`;
-  block.style.height = `${hMm}mm`;
+    wMm = Math.max(minW, wMm);
+    hMm = Math.max(minH, hMm);
+
+    block.style.width = `${wMm}mm`;
+    block.style.height = `${hMm}mm`;
 
     if (item.type === "hover") {
       const hoverIndex = hoverItems.indexOf(item);
       const hoverTotal = Math.max(1, hoverItems.length - 1);
-    
+
       const opacity =
-        0.20 +
+        0.35 +
         (hoverIndex / hoverTotal) *
-        (0.55 - 0.20);
-    
-      block.style.opacity = opacity.toFixed(3);
+        (0.45 - 0.35);
+
+      block.style.setProperty("--image-opacity", opacity.toFixed(3));
       block.style.zIndex = index + 1;
-    
     } else {
-    
-      /* 클릭 이미지 */
-    
-      block.style.opacity = "0.85";
+      block.style.setProperty("--image-opacity", "0.75");
       block.style.zIndex = "9999";
     }
 
     block.innerHTML = `
-  <img src="${item.image}">
-  <div class="trace-text">
-    <h2 style="opacity:1;">${item.title}</h2>
-    ${
-      item.type === "click"
-        ? `<p class="trace-scene" style="opacity:1;">${item.sceneText}</p>`
-        : ""
-    }
-  </div>
-`;
+      <img src="${item.image}" alt="">
+      <div class="trace-text">
+        <h2>${item.title}</h2>
+        ${
+          item.type === "click"
+            ? `<p class="trace-scene">${item.sceneText}</p>`
+            : ""
+        }
+      </div>
+    `;
 
     traceLayer.appendChild(block);
   });
 }
 
 window.addEventListener("beforeprint", buildPrintTrace);
+
+function waitForTraceImages() {
+  const images = Array.from(
+    document.querySelectorAll("#print-trace img")
+  );
+
+  return Promise.all(
+    images.map(img => {
+      if (img.complete && img.naturalWidth > 0) {
+        return Promise.resolve();
+      }
+
+      return new Promise(resolve => {
+        img.onload = resolve;
+
+        img.onerror = () => {
+          img.closest(".trace-block")?.remove();
+          resolve();
+        };
+      });
+    })
+  );
+}
+
+const printBtn = document.getElementById("print-btn");
+
+if (printBtn) {
+  printBtn.addEventListener("click", async () => {
+    buildPrintTrace();
+    await waitForTraceImages();
+    window.print();
+  });
+}
+
+const archivePrintBtn = document.getElementById("archive-print-btn");
+
+if (archivePrintBtn) {
+  archivePrintBtn.addEventListener("click", async () => {
+    buildPrintTrace();
+    await waitForTraceImages();
+    window.print();
+  });
+}
