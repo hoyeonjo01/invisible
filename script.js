@@ -59,7 +59,7 @@ const scenes = [
   },
   {
     "id": "FR-009", "title": "Bonne journée, inconnue", "titleKo": "공원에서의 인사",
-    "scene": "뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 '좋은 하루 보내세요'라고 말하고 갔다. 서로 아무 관계도 없었다.",
+    "scene": "뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 \"좋은 하루 보내세요\"라고 말하고 갔다. 서로 아무 관계도 없었다.",
     "rule": "공공장소에서 모르는 사람에게 가볍게 인사하거나 따뜻한 말을 건네는 것이 자연스럽다.",
     "visibility_score": "70", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
@@ -73,14 +73,14 @@ const scenes = [
   },
   {
     "id": "FR-011", "title": "Bonjour d'abord", "titleKo": "Bonjour가 먼저다",
-    "scene": "마트에서 찾는 물건이 없어 점원에게 바로 질문했더니 점원이 'Bonjour?'라고 반문했다. 뒤늦게 인사를 하고 나서야 점원이 친절하게 답해줬다.",
+    "scene": "마트에서 찾는 물건이 없어 점원에게 바로 질문했더니 점원이 “Bonjour?”라고 반문했다. 뒤늦게 인사를 하고 나서야 점원이 친절하게 답해줬다.",
     "rule": "대화는 반드시 인사로 시작해야 한다. 인사 없이 요청하는 것은 무례하다. Bonjour Effect",
     "visibility_score": "80", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
   },
   {
     "id": "FR-012", "title": "Pardon, toujours", "titleKo": "Pardon의 일상성",
-    "scene": "사람이 많은 인도에서 어깨가 스칠 것 같으면 실제로 부딪히지 않아도 'Pardon'이라고 말하며 지나간다.",
+    "scene": "사람이 많은 인도에서 어깨가 스칠 것 같으면 실제로 부딪히지 않아도 “Pardon”이라고 말하며 지나간다",
     "rule": "타인의 공간을 침범할 가능성이 생기는 순간, 말로 먼저 양해를 구하는 것이 예의다.",
     "visibility_score": "70", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "목격"
@@ -94,7 +94,7 @@ const scenes = [
   },
   {
     "id": "FR-014", "title": "Bah… du coup… en fait", "titleKo": "풍부한 언어적 추임새",
-    "scene": "프랑스 친구들과 대화할 때 'Bah...', 'Phhh...', 'Du coup', 'En fait' 같은 추임새와 혀 차는 소리가 자주 등장했다. 감정과 뉘앙스를 표현하는 소리가 대화 속에 자연스럽게 섞여 있었다.",
+    "scene": "프랑스 친구들과 대화할 때 “Bah...”, “Phhh...”, “Du coup”, “En fait” 같은 추임새와 혀 차는 소리가 자주 등장했다. 감정과 뉘앙스를 표현하는 소리가 대화 속에 자연스럽게 섞여 있었다.",
     "rule": "언어적 추임새는 감정과 태도를 전달하는 중요한 소통 수단이다. 불편한 심정을 드러내도 그걸 무례하다고 생각하지 않는다.",
     "visibility_score": "45", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
@@ -157,7 +157,7 @@ const scenes = [
   },
   {
     "id": "FR-023", "title": "Le feu vert, c'est pour les touristes", "titleKo": "초록불은 여행자의 신호",
-    "scene": "프랑스 친구가 '프랑스에서 초록불을 기다리는 사람은 관광객'이라고 말했다. 실제로 파리 도착 초반 초록불을 기다리고 있었더니 옆 사람이 왜 안 건너냐고 물어봤다.",
+    "scene": "프랑스 친구가 “프랑스에서 초록불을 기다리는 사람은 관광객”이라고 말했다. 실제로 파리 도착 초반 초록불을 기다리고 있었더니 옆 사람이 왜 안 건너냐고 물어봤다.",
     "rule": "횡단보도 신호는 절대 규칙이 아니다. 차가 없으면 건너는 것이 자연스럽다.",
     "visibility_score": "90", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "SPACE", "observation_method": "경험"
@@ -199,7 +199,7 @@ const scenes = [
   },
   {
     "id": "FR-029", "title": "Se reposer sans culpabilité", "titleKo": "쉬는 것에 죄책감이 없다",
-    "scene": "프랑스 친구들은 주말에 아무것도 하지 않거나 낮잠을 자면서 하루를 보내도 자책하지 않았다. '오늘 아무것도 안 했어'를 문제가 아닌 사실로 말했다.",
+    "scene": "프랑스 친구들은 주말에 아무것도 하지 않거나 낮잠을 자면서 하루를 보내도 자책하지 않았다. “오늘 아무것도 안 했어”를 문제가 아닌 사실로 말했다.",
     "rule": "일하지 않는 시간은 낭비가 아니다. 쉬는 것은 삶의 정상적인 상태다.",
     "visibility_score": "25", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hall", "domain": "TIME", "observation_method": "목격"
@@ -213,14 +213,14 @@ const scenes = [
   },
   {
     "id": "FR-031", "title": "Ça dépend", "titleKo": "Ça dépend — 정답은 없다",
-    "scene": "프랑스에서 행정 처리나 규칙에 대해 물으면 종종 'Ça dépend(경우에 따라 다르다)'는 답이 돌아왔다. 안 된다고 들었어도 직접 찾아가 물어보면 되는 경우가 있었다.",
+    "scene": "프랑스에서 행정 처리나 규칙에 대해 물으면 종종 “Ça dépend(경우에 따라 다르다)”는 답이 돌아왔다. 안 된다고 들었어도 직접 찾아가 물어보면 되는 경우가 있었다.",
     "rule": "규칙은 절대적이지 않다. 상황과 담당자에 따라 결과가 달라질 수 있으므로 직접 부딪혀봐야 한다.",
     "visibility_score": "25", "adopted": "인지", "adopted_score": "40",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hall", "domain": "WORK", "observation_method": "경험"
   },
   {
     "id": "FR-032", "title": "La grève fait partie de la vie", "titleKo": "파업은 삶의 일부다",
-    "scene": "프랑스 체류 중 크고 작은 파업을 여러 번 겪었다. 사람들은 'C'est comme ça, c'est la vie'라며 담담하게 받아들였다.",
+    "scene": "프랑스 체류 중 크고 작은 파업을 여러 번 겪었다. 사람들은 “C'est comme ça, c'est la vie”라며 담담하게 받아들였다.",
     "rule": "파업과 시위는 사회적 권리의 표현이다. 불편하더라도 그 자체를 부정적으로 보지 않는다.",
     "visibility_score": "90", "adopted": "인지", "adopted_score": "40",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "WORK", "observation_method": "경험"
@@ -234,28 +234,28 @@ const scenes = [
   },
   {
     "id": "FR-034", "title": "Normalement…", "titleKo": "normalement은 '아마도 안 될 거야'",
-    "scene": "자동차 수리를 맡긴 뒤 정비사가 '오후 6시에 준비될 거예요, normalement'이라고 했다면, 백업 플랜을 세워둬라.",
+    "scene": "테크니션에게 작업을 맡긴 뒤 “오후 6시에 준비될 거예요, normalement”이라고 했다면, 백업 플랜을 세워둬라.",
     "rule": "'Normalement'은 '아마도 안 될 수도 있어요'의 완곡한 표현이다. 확답이 아닌 가능성의 언어다.",
     "visibility_score": "15", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hall", "domain": "WORK", "observation_method": "경험"
   },
   {
     "id": "FR-035", "title": "Les yeux dans les yeux", "titleKo": "건배할 땐 눈을 마주쳐야 한다",
-    "scene": "프랑스 친구들과 건배를 하는데 잠깐 시선을 돌렸더니 친구가 \"눈 마주쳐야 해, 안 그러면 7년간 불운이야\"라고 했다.",
+    "scene": "프랑스 친구들과 건배를 하는데 잠깐 시선을 돌렸더니 친구가 “눈 마주쳐야 해, 안 그러면 7년간 불운이야”라고 했다.",
     "rule": "건배할 때는 잔을 부딪치는 상대방과 반드시 눈을 맞추어야 한다.",
     "visibility_score": "90", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "FOOD", "observation_method": "경험"
   },
   {
     "id": "FR-036", "title": "Satire et critique", "titleKo": "풍자와 비판",
-    "scene": "Charlie Hebdo 표지는 매주 프랑스 사회의 금기를 건드린다. 이게 가능한 건 \"불쾌함도 표현의 자유\"라는 사회적 합의가 있기 때문이다.",
+    "scene": "Charlie Hebdo 표지는 매주 프랑스 사회의 금기를 건드린다. 이게 가능한 건 “불쾌함도 표현의 자유”라는 사회적 합의가 있기 때문이다.",
     "rule": "프랑스에서 풍자와 비판은 언론의 자유의 핵심이다. 불편하거나 충격적인 표현도 표현의 자유로 보호된다.",
     "visibility_score": "75", "adopted": "해당없음", "adopted_score": "해당없음",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Foucault", "domain": "LANG", "observation_method": "목격"
   },
   {
     "id": "FR-037", "title": "Monsieur, pas Professeur", "titleKo": "호칭",
-    "scene": "수업 중 교수님을 부를 때 \"Professeur\"라고 했는데, 주변 프랑스 친구들은 모두 \"Monsieur\"라고 부르고 있었다.",
+    "scene": "수업 중 교수님을 부를 때 “Professeur”라고 했는데, 주변 프랑스 친구들은 모두 “Monsieur”라고 부르고 있었다.",
     "rule": "프랑스에서 교수도, 의사도, 변호사도 Monsieur/Madame으로 부른다. 직책이 아니라 사람으로 호칭한다.",
     "visibility_score": "80", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
@@ -792,12 +792,7 @@ const TOOLTIP = {
     "내면화": "내면화 · 85점\n의식하지 않아도\n자연스럽게 따름",
     "해당없음": "직접 경험하지 않아\n적응도 측정 불가"
   },
-  theory_tag: {
-    "Hall": "Edward T. Hall\n고맥락/저맥락 문화\n시간·공간 개념",
-    "Hofstede": "Geert Hofstede\n개인주의/집단주의\n권력거리 등 문화 차원",
-    "Foucault": "Michel Foucault\n규율·권력·신체에 관한 담론",
-    "Foucault, Hofstede": "Foucault + Hofstede\n신체 규범과 문화적 차원"
-  },
+  
   domain: {
     "WORK": "업무 · 행정",
     "BODY": "신체 · 외모",
@@ -845,7 +840,6 @@ function createMetadata(sortType = "default") {
           <span class="has-tip" data-tip="${TOOLTIP.observation_method[scene.observation_method] || ""}">${scene.observation_method}</span>
           <span class="has-tip" data-tip="가시성 점수 ${scene.visibility_score}/100&#10;인식 시점 + 행동 가시성&#10;+ 언어화 가능성의 합산">${scene.visibility_score}</span>
           <span class="has-tip" data-tip="${(TOOLTIP.adopted[scene.adopted] || "").replace(/\n/g, "&#10;")}">${scene.adopted}</span>
-          <span class="has-tip" data-tip="${(TOOLTIP.theory_tag[scene.theory_tag] || "").replace(/\n/g, "&#10;")}">${scene.theory_tag}</span>
           <span class="has-tip" data-tip="${TOOLTIP.domain[scene.domain] || ""}">${scene.domain}</span>
         </div>
       </div>
@@ -1090,3 +1084,7 @@ if (archivePrintBtn) {
     window.print();
   });
 }
+
+archivePrintBtn.addEventListener("click", () => {
+  window.open("Archive_Hardcopy.pdf", "_blank");
+});

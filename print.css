@@ -52,6 +52,7 @@
     position: relative;
     z-index: 99999;
     opacity: 1 !important;
+    width: 90mm;
   }
 
   .trace-text h2 {
@@ -73,17 +74,18 @@
   .trace-block.click .trace-text h2 {
     font-size: 25pt;
     line-height: 0.9;
-    letter-spacing: -0.045em;
+    letter-spacing: -0.025em;
     color: #000;
   }
 
   .trace-scene {
     margin-top: 2.4mm;
-    max-width: 76mm;
+    width: 80mm;
+    max-width: none;
     font-family: "Noto Serif KR", serif;
     font-size: 9.2pt;
     font-weight: 400;
-    line-height: 1.45;
+    line-height: 1.55;
     letter-spacing: -0.02em;
     word-break: keep-all;
     color: #000;
