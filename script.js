@@ -39,7 +39,7 @@ const scenes = [
   {
     "id": "FR-006", "title": "La CAF prend son temps", "titleKo": "주거보조금 처리의 느림",
     "scene": "한국에서부터 서류를 준비해 프랑스 도착 직후 CAF(주거보조금)를 신청했다. 한 달이 넘도록 아무런 업데이트가 없었고, 프랑스 친구와 직접 사무실을 방문해 문의한 후 2주 뒤에야 보조금을 받을 수 있었다.",
-    "rule": "행정 처리는 '최대한 빨리'가 목표로 진행되지 않는다. 때로는 직접 찾아가는 것이 해결책이 될 수 있다.",
+    "rule": "행정 처리는 ‘최대한 빨리’가 목표로 진행되지 않는다. 때로는 직접 찾아가는 것이 해결책이 될 수 있다.",
     "visibility_score": "15", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "4.0", "frequency": "반복", "theory_tag": "Hall", "domain": "WORK", "observation_method": "경험"
   },
@@ -59,7 +59,7 @@ const scenes = [
   },
   {
     "id": "FR-009", "title": "Bonne journée, inconnue", "titleKo": "공원에서의 인사",
-    "scene": "뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 \"좋은 하루 보내세요\"라고 말하고 갔다. 서로 아무 관계도 없었다.",
+    "scene": "뤽상부르 공원 벤치에 혼자 앉아 있었는데, 지나가던 또래 소녀가 “좋은 하루 보내세요”라고 말하고 갔다. 서로 아무 관계도 없었다.",
     "rule": "공공장소에서 모르는 사람에게 가볍게 인사하거나 따뜻한 말을 건네는 것이 자연스럽다.",
     "visibility_score": "70", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
@@ -74,7 +74,7 @@ const scenes = [
   {
     "id": "FR-011", "title": "Bonjour d'abord", "titleKo": "Bonjour가 먼저다",
     "scene": "마트에서 찾는 물건이 없어 점원에게 바로 질문했더니 점원이 “Bonjour?”라고 반문했다. 뒤늦게 인사를 하고 나서야 점원이 친절하게 답해줬다.",
-    "rule": "대화는 반드시 인사로 시작해야 한다. 인사 없이 요청하는 것은 무례하다. Bonjour Effect",
+    "rule": "대화는 반드시 인사로 시작해야 한다. 인사 없이 요청하는 것은 무례하다. Bonjour Effect.",
     "visibility_score": "80", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
   },
@@ -136,7 +136,7 @@ const scenes = [
   },
   {
     "id": "FR-020", "title": "Tous les âges, même espace", "titleKo": "연령 구분 없는 공간",
-    "scene": "테라스, 바, 펍, 클럽 어디에서나 17세부터 80세까지 다양한 연령대가 함께 어울렸다. 나이 때문에 '여기는 내가 있을 곳이 아니다'라는 분위기가 없었다.",
+    "scene": "테라스, 바, 펍, 클럽 어디에서나 17세부터 80세까지 다양한 연령대가 함께 어울렸다. 나이 때문에 ‘여기는 내가 있을 곳이 아니다’라는 분위기가 없었다.",
     "rule": "공공 유흥 공간은 나이에 따라 구분되지 않는다. 누구나 원하면 있을 수 있다.",
     "visibility_score": "60", "adopted": "내면화", "adopted_score": "85",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "SPACE", "observation_method": "목격"
@@ -228,14 +228,14 @@ const scenes = [
   {
     "id": "FR-033", "title": "Le quart d'heure de politesse", "titleKo": "저녁 초대에는 15분 늦게 가라",
     "scene": "프랑스 친구 집 저녁 식사에 초대받아 정시에 도착했더니 호스트가 아직 준비 중이었다. 나중에 알고 보니 10~15분 늦게 도착하는 것이 오히려 예의로 여겨진다.",
-    "rule": "'예의 바른 15분(quart d'heure de politesse)'은 호스트에게 준비할 여유를 주는 사회적 규칙이다.",
+    "rule": "‘예의 바른 15분(quart d'heure de politesse)’은 호스트에게 준비할 여유를 주는 사회적 규칙이다.",
     "visibility_score": "65", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hall", "domain": "TIME", "observation_method": "경험"
   },
   {
-    "id": "FR-034", "title": "Normalement…", "titleKo": "normalement은 '아마도 안 될 거야'",
+    "id": "FR-034", "title": "Normalement…", "titleKo": "normalement은 ‘아마도 안 될 거야’",
     "scene": "테크니션에게 작업을 맡긴 뒤 “오후 6시에 준비될 거예요, normalement”이라고 했다면, 백업 플랜을 세워둬라.",
-    "rule": "'Normalement'은 '아마도 안 될 수도 있어요'의 완곡한 표현이다. 확답이 아닌 가능성의 언어다.",
+    "rule": "‘Normalement’은 ‘아마도 안 될 수도 있어요’의 완곡한 표현이다. 확답이 아닌 가능성의 언어다.",
     "visibility_score": "15", "adopted": "수용", "adopted_score": "65",
     "emotional_intensity": "3.0", "frequency": "반복", "theory_tag": "Hall", "domain": "WORK", "observation_method": "경험"
   },
@@ -268,6 +268,11 @@ const scenes = [
     "emotional_intensity": "2.0", "frequency": "반복", "theory_tag": "Hofstede", "domain": "LANG", "observation_method": "경험"
   }
 ];
+
+const PRINT_PLATE = "all";
+// "all" = 원래 출력
+// "hover" = 호버 이미지만 출력
+// "click" = 클릭 이미지 + 텍스트만 출력
 
 const TILE_W = 3800;
 const TILE_H = 2600;
@@ -956,7 +961,20 @@ function buildPrintTrace() {
   const hoverItems = traceData.filter(item => item.type === "hover");
   const clickItems = traceData.filter(item => item.type === "click");
 
-  const printItems = [...hoverItems, ...clickItems];
+  const PRINT_PLATE = "all";
+// "all"
+// "hover"
+// "click"
+
+let printItems;
+
+if (PRINT_PLATE === "hover") {
+  printItems = hoverItems;
+} else if (PRINT_PLATE === "click") {
+  printItems = clickItems;
+} else {
+  printItems = [...hoverItems, ...clickItems];
+}
 
   const baseW = printItems[0]?.viewportW || window.innerWidth;
   const baseH = printItems[0]?.viewportH || window.innerHeight;
