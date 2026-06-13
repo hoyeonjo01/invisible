@@ -1065,7 +1065,18 @@ function waitForTraceImages() {
   );
 }
 
-const printBtn = document.getElementById("print-btn")
+const printBtn = document.getElementById("print-btn");
+
+if (printBtn) {
+  printBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    buildPrintTrace();
+    await waitForTraceImages();
+    window.print();
+  });
+}
 
 const archivePrintBtn = document.getElementById("archive-print-btn");
 
