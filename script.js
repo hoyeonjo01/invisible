@@ -1065,26 +1065,15 @@ function waitForTraceImages() {
   );
 }
 
-const printBtn = document.getElementById("print-btn");
-
-if (printBtn) {
-  printBtn.addEventListener("click", async () => {
-    buildPrintTrace();
-    await waitForTraceImages();
-    window.print();
-  });
-}
+const printBtn = document.getElementById("print-btn")
 
 const archivePrintBtn = document.getElementById("archive-print-btn");
 
 if (archivePrintBtn) {
-  archivePrintBtn.addEventListener("click", async () => {
-    buildPrintTrace();
-    await waitForTraceImages();
-    window.print();
+  archivePrintBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    window.open("Archive_Hardcopy.pdf", "_blank");
   });
 }
-
-archivePrintBtn.addEventListener("click", () => {
-  window.open("Archive_Hardcopy.pdf", "_blank");
-});
