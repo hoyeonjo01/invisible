@@ -996,8 +996,8 @@ if (PRINT_PLATE === "hover") {
     const block = document.createElement("div");
     block.classList.add("trace-block", item.type);
 
-    const left = item.x * scaleX;
-    const top = item.y * scaleY;
+    const left = item.x * scaleX ;
+    const top = item.y * scaleY ;
 
     block.style.left = `${left}mm`;
     block.style.top = `${top}mm`;
