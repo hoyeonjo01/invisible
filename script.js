@@ -584,17 +584,16 @@ function createTitles() {
 function animateTitles(t) {
   titleNodes.forEach((d) => {
 
-    // 천천히 좌우로 부유
+    // 좌우로 천천히 부유
     const floatX =
-      Math.sin(t * 0.00012 + d.phase) * 12 +
-      Math.sin(t * 0.00005 + d.phase * 1.7) * 5;
+      Math.sin(t * 0.00018 + d.phase) * 45 +
+      Math.sin(t * 0.00007 + d.phase * 1.7) * 18;
 
-    // 천천히 위아래로 부유
+    // 위아래로 천천히 부유
     const floatY =
-      Math.cos(t * 0.00010 + d.phase * 1.3) * 8 +
-      Math.sin(t * 0.00004 + d.phase * 0.8) * 4;
+      Math.cos(t * 0.00015 + d.phase * 1.3) * 32 +
+      Math.sin(t * 0.00006 + d.phase * 0.8) * 12;
 
-    // 기존 dodge 기능과 충돌하지 않도록 유지
     d.evadeX *= 0.94;
     d.evadeY *= 0.94;
 
@@ -607,7 +606,6 @@ function animateTitles(t) {
 
   requestAnimationFrame(animateTitles);
 }
-
 function pickImage(scene) {
   let img;
 
