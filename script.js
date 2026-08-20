@@ -583,11 +583,26 @@ function createTitles() {
 
 function animateTitles(t) {
   titleNodes.forEach((d) => {
+
+    // 천천히 좌우로 부유
+    const floatX =
+      Math.sin(t * 0.00012 + d.phase) * 12 +
+      Math.sin(t * 0.00005 + d.phase * 1.7) * 5;
+
+    // 천천히 위아래로 부유
+    const floatY =
+      Math.cos(t * 0.00010 + d.phase * 1.3) * 8 +
+      Math.sin(t * 0.00004 + d.phase * 0.8) * 4;
+
+    // 기존 dodge 기능과 충돌하지 않도록 유지
     d.evadeX *= 0.94;
     d.evadeY *= 0.94;
 
     d.el.style.transform =
-      `translate(calc(-50% + ${d.evadeX}px), calc(-50% + ${d.evadeY}px))`;
+      `translate(
+        calc(-50% + ${floatX + d.evadeX}px),
+        calc(-50% + ${floatY + d.evadeY}px)
+      )`;
   });
 
   requestAnimationFrame(animateTitles);
